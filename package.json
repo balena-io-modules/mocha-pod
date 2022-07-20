@@ -1,6 +1,6 @@
 {
 	"name": "@balena/mocha-pod",
-	"version": "2.1.0",
+	"version": "0.0.1",
 	"description": "Mocha + Docker. Run integration tests in a docker container",
 	"homepage": "https://github.com/balena-io-modules/mocha-pod#readme",
 	"main": "build/index.js",
@@ -29,7 +29,7 @@
 		"build": "npm run clean && tsc",
 		"lint": "balena-lint --typescript lib tests",
 		"lint-fix": "balena-lint --typescript --fix lib tests",
-		"test:node": "mocha -r ts-node/register -r lib/index.ts --reporter spec tests/**/*.spec.ts",
+		"test:node": "mocha -r ts-node/register -r lib/attach.ts --reporter spec tests/**/*.spec.ts",
 		"test": "npm run build && npm run lint && npm run test:node",
 		"test:fast": "npm run build && npm run test:node",
 		"prepack": "npm run build"
@@ -38,6 +38,7 @@
 		"@balena/lint": "^5.4.2",
 		"@types/chai": "^4.2.18",
 		"@types/chai-as-promised": "^7.1.4",
+		"@types/dockerode": "^3.3.9",
 		"@types/mocha": "^8.2.3",
 		"balena-config-karma": "^3.0.0",
 		"chai": "^4.3.4",
@@ -49,7 +50,7 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"@types/dockerode": "^3.3.9",
+		"@balena/compose": "^2.1.0",
 		"dockerode": "^3.3.2",
 		"mocha": "^8.4.0"
 	}
