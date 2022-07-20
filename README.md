@@ -1,23 +1,29 @@
-# Skeleton Project
+# Mocha-Pod
 
-This is a skeleton template for a TypeScript library project, containing all the default files and settings required for a balena project.
-As a result package-lock files are disabled so that upstream dependency issues are surfaces on our CI.
-In case that you are implementing a standalone project, you can enable them by deleting the `.npmrc`.
+Run your [Mocha](https://mochajs.org/) integration tests inside a docker container.
 
-Modify the `package.json`, and README.md file as required, `npm install`, then implement code in the `lib` directory. 
+This ensures that anyone running the tests will have the same experience, no matter the development machine. It makes use of [Mocha fixtures](https://mochajs.org/#global-fixtures)
+and [root hooks](https://mochajs.org/#root-hook-plugins) to setup the environment and reset between each test.
 
-Compiled code will be output into the `build` directory (transpiled JS, declaration files and source maps).
+- Simple setup. Use [.mochapod.js](#Configuration) for extra configuration.
+- CI compatibility
+- Additional filesystem utilities to setup/destroy the test environment.
 
-`npm test` will run the tests on both node and a browser.
-In case that you are implementing a node only library, you can just just drop karma.conf.js and all karma related references in the package.json.
+## Requirements
 
-## Integrating with balenaCI
+- Docker
 
-After cloning & scaffolding the repository
-* Reset the package.json version to the desired one for the initial release, eg `0.1.0`.
-* Delete the CHANGELOG.md & .versionbot folder.
-* Set the appropriate .github/CODEOWNERS.
-* Push the scaffolded project to `master`
-* Create a new branch and open a PR for it.
-* After balenaCI picks up the PR, go to the repository's settings page and add a
-  `master` branch protection rule and mark the balenaCI checks as required.
+## Usage
+
+Add `--require @balena/mocha-pod` to the mocha command to ensure Mocha-Pod test [fixtures](https://mochajs.org/#global-fixtures) are ran correctly.
+
+```
+mocha --require @balena/mocha-pod test/test.spec.js
+```
+
+## Configuration
+
+## CI integration
+
+When running tests inside a CI environment. Make sure the `MOCHA_POD_IS_CI` environment variable is set to true
+to prevent mocha pod from trying to build a new image.
