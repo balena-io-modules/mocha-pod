@@ -1,0 +1,2 @@
+dockerHost: unix:///var/run/docker.sock
+buildOnly: true
