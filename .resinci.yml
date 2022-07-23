@@ -1,0 +1,3 @@
+reviewers: 1
+docker: true
+npm: false
