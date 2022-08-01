@@ -83,6 +83,14 @@ export type MochaPodConfig = {
 	 */
 	projectName: string;
 
+	/**
+	 * Test command to use when running tests within a container. This will only be used
+	 * if `buildOnly` is set to `false`.
+	 *
+	 * Defaults to `["npm", "run", "test"]`
+	 */
+	testCommand: string[];
+
 	// Leave the type open so additional keys can be set
 	[key: string]: any;
 };
@@ -125,6 +133,7 @@ const DEFAULTS: MochaPodConfig = {
 	deviceType: inferDeviceTypeFormArch('amd64'),
 	projectName: 'mocha-pod',
 	buildOnly: false,
+	testCommand: ['npm', 'run', 'test'],
 };
 
 function toAbsolute(dir: string, basedir = DEFAULTS.basedir) {

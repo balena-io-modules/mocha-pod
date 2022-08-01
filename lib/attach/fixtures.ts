@@ -262,16 +262,10 @@ export async function mochaGlobalSetup() {
 
 	// Try to start the container
 	logger.info('Running test suite inside a new container');
-	const [output] = await docker.run(
-		image,
-		// QUESTION: do we want to make the command configurable
-		['npm', 'run', 'test'],
-		process.stdout,
-		{
-			Env: ['MOCHAPOD_SKIP_SETUP=1'], // Skip the setup when running inside the container
-			HostConfig: { AutoRemove: true },
-		},
-	);
+	const [output] = await docker.run(image, config.testCommand, process.stdout, {
+		Env: ['MOCHAPOD_SKIP_SETUP=1'], // Skip the setup when running inside the container
+		HostConfig: { AutoRemove: true },
+	});
 
 	// Tests are run in the container, exit the process before mocha can
 	// run the local tests
