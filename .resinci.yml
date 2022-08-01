@@ -1,3 +1,12 @@
+# Require at least one reviewer before merging
 reviewers: 1
-docker: true
-npm: false
+
+# Build with docker but do not publish. This will allow
+# the tests to run at part of the image build step
+docker:
+  publish: false
+
+# Publish npm module (TODO) but do not test
+# as the tests are ran with the docker build
+npm:
+  test: false
