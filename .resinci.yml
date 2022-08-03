@@ -9,4 +9,4 @@ docker:
 # Publish npm module (TODO) but do not test
 # as the tests are ran with the docker build
 npm:
-  test: false
+  platforms: []
