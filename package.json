@@ -53,6 +53,7 @@
 		"@types/dockerode": "^3.3.9",
 		"@types/js-yaml": "^4.0.5",
 		"@types/mocha": "^9.1.1",
+		"@types/tar-fs": "^2.0.1",
 		"@types/tar-stream": "^2.2.2",
 		"balena-config-karma": "^3.0.0",
 		"chai": "^4.3.4",
@@ -70,7 +71,10 @@
 		"@balena/dockerignore": "^1.0.2",
 		"debug": "^4.3.4",
 		"dockerode": "^3.3.2",
+		"globby": "^11.1.0",
 		"js-yaml": "^4.1.0",
+		"nanoid": "^3.3.4",
+		"tar-fs": "^2.1.1",
 		"tar-stream": "^2.2.0"
 	},
 	"versionist": {

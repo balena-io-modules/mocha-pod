@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:alpine as build
 
 WORKDIR /usr/src/app
 
@@ -18,6 +18,12 @@ COPY tests ./tests
 
 # Do not forget to copy mocha-pod config
 COPY .mochapodrc.yml ./
+
+# Set the environment variable globally to use
+# this image for development of mocha-pod
+ENV MOCHAPOD_SKIP_SETUP=1
+
+FROM build as testing
 
 # Comment the next line if you want to run the tests as a separate
 # container instead of during the image build step.
