@@ -10,6 +10,7 @@ RUN npm install
 # Copy all files necessary for running the tests to the
 # test stage
 COPY tsconfig.json ./
+COPY tsconfig.release.json ./
 COPY lib ./lib
 
 # Include the test directory in this stage

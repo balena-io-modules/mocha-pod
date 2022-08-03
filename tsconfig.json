@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"baseUrl": "./",
 		"module": "commonjs",
 		"outDir": "build",
 		"noUnusedParameters": true,
@@ -9,9 +10,11 @@
 		"strict": true,
 		"target": "es2015",
 		"declaration": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"paths": {
+			"~/mocha-pod": ["lib/index.ts"],
+			"~/testing": ["tests/index.ts"]
+		}
 	},
-	"include": [
-		"lib/**/*.ts"
-	]
+	"include": ["lib/**/*.ts", "tests/**/*.ts"]
 }
