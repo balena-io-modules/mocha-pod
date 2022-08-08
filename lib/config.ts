@@ -116,7 +116,8 @@ function inferDeviceTypeFormArch(arch: MochaPodConfig['deviceArch']) {
 	}
 }
 
-const CONFIG_FILE = '.mochapodrc.yml';
+const MOCHAPOD_CONFIG =
+	process.env.MOCHAPOD_CONFIG ?? path.join(process.cwd(), '.mochapodrc.yml');
 const DEFAULTS: MochaPodConfig = {
 	basedir: process.cwd(),
 	logging: 'mocha-pod,mocha-pod:error',
@@ -154,20 +155,24 @@ function slugify(text: string) {
 		.replace(/\-\-+/g, '-'); // Replace multiple - with single -
 }
 
-export async function Config(overrides: Partial<MochaPodConfig> = {}) {
-	const dir = toAbsolute(overrides.basedir ?? DEFAULTS.basedir);
-
+export async function Config(
+	overrides: Partial<MochaPodConfig> = {},
+	source = MOCHAPOD_CONFIG,
+) {
 	const userconf = await fs
-		.readFile(path.join(dir, CONFIG_FILE), 'utf8')
+		.readFile(source, 'utf8')
 		.then((contents) => YAML.load(contents) as Partial<MochaPodConfig>)
 		.catch((e) => {
 			if (e.code !== 'ENOENT') {
-				throw new Error(`Error reading file ${CONFIG_FILE}: ${e.message}`);
+				throw new Error(
+					`Error reading configuration from ${source}: ${e.message}`,
+				);
 			}
 			return {} as Partial<MochaPodConfig>;
 		});
 
 	// Deduce the name from package.json
+	const dir = toAbsolute(overrides.basedir ?? DEFAULTS.basedir);
 	const projectName =
 		userconf.projectName ??
 		(await fs
