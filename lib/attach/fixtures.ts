@@ -4,8 +4,8 @@ import * as Docker from 'dockerode';
 import { promises as fs } from 'fs';
 import * as readline from 'readline';
 import * as path from 'path';
-import { Readable, PassThrough } from 'stream';
-import * as tar from 'tar-stream';
+import { PassThrough } from 'stream';
+import * as tar from 'tar-fs';
 
 import logger from '../logger';
 
@@ -18,7 +18,7 @@ const { Builder } = build;
  * an instance of an Ignore object with some sensible defaults
  * added
  */
-async function getDockerIgnoreInstance(dir: string, defaults: string[] = []) {
+async function allowedFromDockerIgnore(dir: string, defaults: string[] = []) {
 	const ignorePath = path.join(dir, '.dockerignore');
 	const ignoreEntries = await fs
 		.readFile(ignorePath, 'utf8')
@@ -32,52 +32,8 @@ async function getDockerIgnoreInstance(dir: string, defaults: string[] = []) {
 
 	return dockerIgnore({ ignorecase: false })
 		.add(['**/.git']) // Always ignore .git directories
-		.add(ignoreEntries);
-}
-
-/**
- * Create a tar stream from the base directory excluding those files
- * where `allowed(file)` is false.
- */
-async function tarDirectory(
-	basedir: string,
-	allowed: (somePath: string) => boolean,
-): Promise<Readable> {
-	const pack = tar.pack();
-
-	const addFromDir = async (dir: string) => {
-		const entries = await fs.readdir(dir);
-		for (const entry of entries) {
-			const newPath = path.resolve(dir, entry);
-			// Here we filter the things we don't want
-			if (!allowed(newPath)) {
-				continue;
-			}
-			// We use lstat here, otherwise an error will be
-			// thrown on a symbolic link
-			const stat = await fs.lstat(newPath);
-			if (stat.isDirectory()) {
-				await addFromDir(newPath);
-			} else {
-				pack.entry(
-					{
-						name: path.relative(basedir, newPath),
-						mode: stat.mode,
-						size: stat.size,
-					},
-					await fs.readFile(newPath),
-				);
-			}
-		}
-	};
-
-	// Start recursing through the directory tree
-	await addFromDir(basedir);
-
-	// Finalize the stream
-	pack.finalize();
-
-	return pack;
+		.add(ignoreEntries)
+		.createFilter();
 }
 
 // Source: https://github.com/balena-io/balena-cli/blob/f6d668684a6f5ea8102a964ca1942b242eaa7ae2/lib/utils/device/live.ts#L539-L547
@@ -141,8 +97,14 @@ export async function mochaGlobalSetup() {
 	const builder = Builder.fromDockerode(docker);
 
 	// Create the tar archive
-	const ig = await getDockerIgnoreInstance(config.basedir, config.dockerIgnore);
-	const tarStream = await tarDirectory(config.basedir, ig.createFilter());
+	const allowed = await allowedFromDockerIgnore(
+		config.basedir,
+		config.dockerIgnore,
+	);
+
+	const tarStream = tar.pack(config.basedir, {
+		ignore: (name) => !allowed(name),
+	});
 
 	const bundle = new Resolve.Bundle(
 		tarStream,
