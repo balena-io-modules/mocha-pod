@@ -3,7 +3,9 @@ import * as globby from 'globby';
 import * as os from 'os';
 import * as path from 'path';
 
-import { restore as testfsRestore } from '../testfs';
+import logger from '../logger';
+import { MochaPodConfig } from '../config';
+import testfs from '../testfs';
 
 export class MochaPodError extends Error {}
 
@@ -28,11 +30,14 @@ export const mochaHooks = {
 			);
 		}
 
-		// TODO: read config and set testfs default configuration
+		// Read config and set testfs default configuration
+		const config = await MochaPodConfig();
+		testfs.config(config.testfs);
+		logger.debug('Using Config', JSON.stringify(config, null, 2));
 	},
 
 	async afterAll() {
 		// Ensure the filesystem is restored in case the user forgot
-		await testfsRestore();
+		await testfs.restore();
 	},
 };

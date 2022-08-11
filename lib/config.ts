@@ -1,6 +1,9 @@
 import { promises as fs } from 'fs';
 import * as YAML from 'js-yaml';
 import * as path from 'path';
+import logger from './logger';
+
+import { TestFsConfig } from './testfs';
 
 export type MochaPodConfig = {
 	/**
@@ -91,6 +94,13 @@ export type MochaPodConfig = {
 	 */
 	testCommand: string[];
 
+	/**
+	 * TestFs configuration to be used globally for all tests
+	 *
+	 * @default `{}`
+	 */
+	testfs: Partial<TestFsConfig>;
+
 	// Leave the type open so additional keys can be set
 	[key: string]: any;
 };
@@ -135,6 +145,7 @@ const DEFAULTS: MochaPodConfig = {
 	projectName: 'mocha-pod',
 	buildOnly: false,
 	testCommand: ['npm', 'run', 'test'],
+	testfs: {},
 };
 
 function toAbsolute(dir: string, basedir = DEFAULTS.basedir) {
@@ -155,7 +166,7 @@ function slugify(text: string) {
 		.replace(/\-\-+/g, '-'); // Replace multiple - with single -
 }
 
-export async function Config(
+export async function MochaPodConfig(
 	overrides: Partial<MochaPodConfig> = {},
 	source = MOCHAPOD_CONFIG,
 ) {
@@ -192,8 +203,14 @@ export async function Config(
 	// Infer the device type one more time if the user has changed it
 	const deviceType = inferDeviceTypeFormArch(conf.deviceArch);
 
+	// Set log levels
+	logger.enable(
+		// Append value of DEBUG env var if any
+		[conf.logging, process.env.DEBUG].filter((s) => !!s).join(','),
+	);
+
 	// Use absolute path for the basedir
 	return { ...conf, basedir: toAbsolute(conf.basedir), deviceType };
 }
 
-export default Config;
+export default MochaPodConfig;

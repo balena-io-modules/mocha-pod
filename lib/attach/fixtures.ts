@@ -1,6 +1,5 @@
 import { build, resolve as Resolve } from '@balena/compose';
 import dockerIgnore from '@balena/dockerignore';
-import debug from 'debug';
 import * as Docker from 'dockerode';
 import { promises as fs } from 'fs';
 import * as readline from 'readline';
@@ -8,19 +7,11 @@ import * as path from 'path';
 import { Readable, PassThrough } from 'stream';
 import * as tar from 'tar-stream';
 
-import { Config } from '../config';
+import logger from '../logger';
+
+import { MochaPodConfig } from '../config';
 
 const { Builder } = build;
-
-// Send logger.info() and logger.debug() output to stdout
-const info = debug('mocha-pod');
-info.log = console.info.bind(console);
-
-const logger = {
-	info,
-	error: debug('mocha-pod:error'),
-	debug: info.extend('debug'),
-};
 
 /**
  * Read dockerignore from the basedir and return
@@ -127,13 +118,7 @@ function getMultiStateImageIDs(buildLog: string): string[] {
  * before launching the test suite. All the setup for mocha-docker happens here.
  */
 export async function mochaGlobalSetup() {
-	const config = await Config();
-
-	// Set log levels
-	debug.enable(
-		// Append value of DEBUG env var if any
-		[config.logging, process.env.DEBUG].filter((s) => !!s).join(','),
-	);
+	const config = await MochaPodConfig();
 
 	// If the build is happening on a CI, skip this step
 	if (['1', 'true'].includes(process.env.MOCHAPOD_SKIP_SETUP ?? '0')) {

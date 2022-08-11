@@ -2,6 +2,7 @@ import * as globby from 'globby';
 import * as os from 'os';
 import * as path from 'path';
 import * as tar from 'tar-fs';
+import logger from './logger';
 
 import { nanoid } from 'nanoid';
 
@@ -21,22 +22,22 @@ export interface Directory {
 	[key: string]: File | Directory;
 }
 
-export class DirectoryIsInvalid extends Error {}
+class DirectoryIsInvalid extends Error {}
 
 /**
  * Type guard to idenfity an object as a file
  */
-export const isFile = (x: unknown): x is File =>
+const isFile = (x: unknown): x is File =>
 	x != null &&
 	(typeof x === 'string' || x instanceof String || Buffer.isBuffer(x));
 
 /**
  * Type guard to identify an object as a directory
  */
-export const isDirectory = (x: File | Directory): x is Directory =>
+const isDirectory = (x: File | Directory): x is Directory =>
 	x != null && !isFile(x);
 
-export interface TestFsConfig {
+interface TestFsExtra {
 	/**
 	 * Directory to use as base for the spec and globs
 	 *
@@ -67,15 +68,18 @@ export interface TestFsSet {
 	 * Location of the backup file
 	 */
 	readonly backup: string;
-	/**
-	 * List of files that have been backed up
-	 */
-	readonly files: string[];
 
 	/**
 	 * Restore the environment to the state before the filesystem was setup
 	 */
 	restore(): Promise<TestFsUnset>;
+}
+
+export interface TestFsConfig extends TestFsExtra {
+	/**
+	 * Additional directory specification to be passed to `testfs()`
+	 */
+	readonly filesystem: Directory;
 }
 
 export interface TestFsUnset {
@@ -86,8 +90,7 @@ export interface TestFsUnset {
 	setup(): Promise<TestFsSet>;
 }
 
-export type TestFs = TestFsUnset | TestFsSet;
-export class TestFsLocked extends Error {}
+class TestFsLocked extends Error {}
 
 function normalize(child: Directory, parent = '.'): Directory {
 	const grouped = Object.keys(child)
@@ -298,7 +301,7 @@ export function flatten(root: Directory): Directory {
 /**
  * Recursively write a directory spec to disk
  */
-export async function replace(spec: Directory, parent = '/') {
+async function replace(spec: Directory, parent = '/') {
 	// Create the parent if it doesn't exist
 	if (parent !== '/') {
 		await fs.mkdir(parent);
@@ -362,8 +365,22 @@ const lock = (() => {
 /**
  * Global restore function. Should be used to cleanup any errors in case of failure
  */
-export async function restore() {
+async function restore() {
 	await lock.release(true);
+}
+
+let defaults: TestFsConfig = {
+	filesystem: {},
+	keep: [],
+	cleanup: [],
+	rootdir: '/',
+};
+
+/**
+ * Set global defaults for all test fs instances
+ */
+function config(conf: Partial<TestFsConfig>): void {
+	defaults = { ...defaults, ...conf };
 }
 
 /**
@@ -398,11 +415,22 @@ export async function restore() {
  *                         Add here any temporary files created during the test that should be cleaned up.
  * @returns              - Unset TmpFs configuration
  */
-export function testfs(
-	spec: Directory,
-	{ rootdir = '/', keep = [], cleanup = [] }: Partial<TestFsConfig> = {},
+function TestFs(
+	spec: Directory = {},
+	{
+		rootdir = defaults.rootdir,
+		keep = [],
+		cleanup = [],
+	}: Partial<TestFsExtra> = {},
 ): TestFsUnset {
-	const toUpdate = flatten(spec);
+	keep = [...defaults.keep, ...keep];
+	cleanup = [...defaults.cleanup, ...cleanup];
+
+	// Get the default directory spec
+	const defaultSpec = flatten(defaults.filesystem);
+
+	// Merge the given spec to the default spec.
+	const toUpdate = flatten({ ...defaultSpec, ...spec });
 	return {
 		async setup() {
 			const lookup = await Promise.all(
@@ -424,6 +452,7 @@ export function testfs(
 
 			const toKeep = await globby(keepGlobs, { cwd: rootdir });
 
+			logger.debug('Backing up files', toKeep);
 			const tarFile: string = await new Promise((resolve) => {
 				const filename = path.join(os.tmpdir(), `mochapod-${nanoid()}.tar`);
 				const stream = tar
@@ -441,10 +470,9 @@ export function testfs(
 			// Return the restored
 			const fsReady = {
 				backup: tarFile,
-				files: toKeep,
 				async restore() {
 					if (isRestored) {
-						return testfs(spec, { keep, cleanup });
+						return TestFs(spec, { keep, cleanup });
 					}
 
 					// Cleanup the files form the cleanup glob
@@ -457,6 +485,8 @@ export function testfs(
 					}
 
 					// Now restore the files from the backup
+					logger.debug('Restoring files', toKeep);
+
 					await new Promise((resolve) =>
 						createReadStream(tarFile)
 							.pipe(tar.extract(rootdir))
@@ -474,7 +504,7 @@ export function testfs(
 					await lock.release();
 
 					// Return a new instance from the original option list
-					return testfs(spec, { keep, cleanup });
+					return TestFs(spec, { keep, cleanup });
 				},
 			};
 
@@ -508,4 +538,53 @@ export function testfs(
 	};
 }
 
+export interface TestFs {
+	/**
+	 * Create a TmpFs configuration from the given directory spec.
+	 *
+	 * On setup the method will prepare the filesystem for testing by performing the following
+	 * operations.
+	 *
+	 * - Group the directory spec into existing/non-existing files. Existing files go into the keep list for backup and non-existing will go to the cleanup list.
+	 * - Create a backup of all files matching the keep list
+	 * - Replace all files from the directory spec into the filesystem.
+	 *
+	 *  Note that attempts to call the setup function more than once will cause an exeption.
+	 *
+	 * **IMPORTANT** don't use this module in a real system, specially with admin permissions.
+	 * If system files are provided in the directory, the module will overwrite them and a crash before
+	 * a `restore()` is completed may leave the system in an inconsistent state. This is designed to use within a throwaway
+	 * system such as a docker container.
+	 *
+	 *
+	 * @param spec          - Directory specification with files that need to be
+	 *                         exist after set-up of the test fs. If the file exists previously
+	 *                         in the given location it will be added to the `keep` list for restoring later.
+	 *                         If it doesn't it will be added to the `cleanup` list to be removed during cleanup
+	 * @param extra         - Additional options for the test fs
+	 * @param extra.rootdir - Root directory for the directory spec. Defaults to '/'
+	 * @param extra.keep    - List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
+	 *                         identifying any files that should be backed up prior to setting up the
+	 *                         filesystem. Any files that will be modified during the test should go here
+	 * @param extra.cleanup - List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
+	 *                         identifying  files that should be removed during the restore step.
+	 *                         Add here any temporary files created during the test that should be cleaned up.
+	 * @returns             - Unset TmpFs configuration
+	 */
+	(spec?: Directory, extra?: Partial<TestFsExtra>): TestFsUnset;
+
+	/*
+	 * Set global defaults for all test fs instances
+	 *
+	 * @param conf - additional configurations to use as defaults for all testfs instances
+	 */
+	config(conf: Partial<TestFsConfig>): void;
+
+	/**
+	 * Restore testsfs globally
+	 */
+	restore(): Promise<void>;
+}
+
+export const testfs: TestFs = Object.assign(TestFs, { config, restore });
 export default testfs;
