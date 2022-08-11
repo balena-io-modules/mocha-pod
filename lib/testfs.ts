@@ -1,4 +1,4 @@
-import * as globby from 'globby';
+import * as fg from 'fast-glob';
 import * as os from 'os';
 import * as path from 'path';
 import * as tar from 'tar-fs';
@@ -45,7 +45,7 @@ interface TestFsExtra {
 	 */
 	readonly rootdir: string;
 	/**
-	 * List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
+	 * List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
 	 * identifying any files that should be backed up prior to setting up the
 	 * filesystem. Any files that will be modified during the test should go here
 	 *
@@ -54,7 +54,7 @@ interface TestFsExtra {
 	readonly keep: string[];
 
 	/**
-	 * List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
+	 * List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
 	 * identifying  files that should be removed during the restore step.
 	 * Add here any temporary files created during the test that should be cleaned up.
 	 *
@@ -407,10 +407,10 @@ function config(conf: Partial<TestFsConfig>): void {
  *                         If it doesn't it will be added to the `cleanup` list to be removed during cleanup
  * @param config         - Additional options for the test fs
  * @param config.rootdir - Root directory for the directory spec. Defaults to '/'
- * @param config.keep    - List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
+ * @param config.keep    - List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
  *                         identifying any files that should be backed up prior to setting up the
  *                         filesystem. Any files that will be modified during the test should go here
- * @param config.cleanup - List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
+ * @param config.cleanup - List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
  *                         identifying  files that should be removed during the restore step.
  *                         Add here any temporary files created during the test that should be cleaned up.
  * @returns              - Unset TmpFs configuration
@@ -450,7 +450,7 @@ function TestFs(
 				lookup.filter(({ exists }) => !exists).map(({ filename }) => filename),
 			);
 
-			const toKeep = await globby(keepGlobs, { cwd: rootdir });
+			const toKeep = await fg(keepGlobs, { cwd: rootdir });
 
 			logger.debug('Backing up files', toKeep);
 			const tarFile: string = await new Promise((resolve) => {
@@ -476,7 +476,7 @@ function TestFs(
 					}
 
 					// Cleanup the files form the cleanup glob
-					const toCleanup = await globby(cleanupGlobs, { cwd: rootdir });
+					const toCleanup = await fg(cleanupGlobs, { cwd: rootdir });
 					for (const chunk of toChunks(toCleanup, 50)) {
 						// Delete files in chunks of 50 ignoring failures
 						await Promise.all(
@@ -558,17 +558,17 @@ export interface TestFs {
 	 *
 	 *
 	 * @param spec          - Directory specification with files that need to be
-	 *                         exist after set-up of the test fs. If the file exists previously
-	 *                         in the given location it will be added to the `keep` list for restoring later.
-	 *                         If it doesn't it will be added to the `cleanup` list to be removed during cleanup
+	 *                        exist after set-up of the test fs. If the file exists previously
+	 *                        in the given location it will be added to the `keep` list for restoring later.
+	 *                        If it doesn't it will be added to the `cleanup` list to be removed during cleanup
 	 * @param extra         - Additional options for the test fs
 	 * @param extra.rootdir - Root directory for the directory spec. Defaults to '/'
-	 * @param extra.keep    - List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
-	 *                         identifying any files that should be backed up prior to setting up the
-	 *                         filesystem. Any files that will be modified during the test should go here
-	 * @param extra.cleanup - List of files or [globbing patterns](https://github.com/sindresorhus/globby/#globbing-patterns)
-	 *                         identifying  files that should be removed during the restore step.
-	 *                         Add here any temporary files created during the test that should be cleaned up.
+	 * @param extra.keep    - List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
+	 *                        identifying any files that should be backed up prior to setting up the
+	 *                        filesystem. Any files that will be modified during the test should go here
+	 * @param extra.cleanup - List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
+	 *                        identifying  files that should be removed during the restore step.
+	 *                        Add here any temporary files created during the test that should be cleaned up.
 	 * @returns             - Unset TmpFs configuration
 	 */
 	(spec?: Directory, extra?: Partial<TestFsExtra>): TestFsUnset;

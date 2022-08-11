@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import * as globby from 'globby';
+import * as fg from 'fast-glob';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -38,7 +38,7 @@ export const mochaHooks = {
 				);
 			});
 
-		const backups = await globby(path.join(os.tmpdir(), 'mochapod-*.tar'));
+		const backups = await fg(path.join(os.tmpdir(), 'mochapod-*.tar'));
 		if (backups.length > 0) {
 			throw new MochaPodError(
 				[

@@ -71,7 +71,7 @@
 		"@balena/dockerignore": "^1.0.2",
 		"debug": "^4.3.4",
 		"dockerode": "^3.3.2",
-		"globby": "^11.1.0",
+		"fast-glob": "^3.2.11",
 		"js-yaml": "^4.1.0",
 		"nanoid": "^3.3.4",
 		"tar-fs": "^2.1.1"
