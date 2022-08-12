@@ -1,33 +1,24 @@
 import { build, resolve as Resolve } from '@balena/compose';
 import dockerIgnore from '@balena/dockerignore';
-import debug from 'debug';
 import * as Docker from 'dockerode';
 import { promises as fs } from 'fs';
 import * as readline from 'readline';
 import * as path from 'path';
-import { Readable, PassThrough } from 'stream';
-import * as tar from 'tar-stream';
+import { PassThrough } from 'stream';
+import * as tar from 'tar-fs';
+
+import logger from '../logger';
 
 import { Config } from '../config';
 
 const { Builder } = build;
-
-// Send logger.info() and logger.debug() output to stdout
-const info = debug('mocha-pod');
-info.log = console.info.bind(console);
-
-const logger = {
-	info,
-	error: debug('mocha-pod:error'),
-	debug: info.extend('debug'),
-};
 
 /**
  * Read dockerignore from the basedir and return
  * an instance of an Ignore object with some sensible defaults
  * added
  */
-async function getDockerIgnoreInstance(dir: string, defaults: string[] = []) {
+async function allowedFromDockerIgnore(dir: string, defaults: string[] = []) {
 	const ignorePath = path.join(dir, '.dockerignore');
 	const ignoreEntries = await fs
 		.readFile(ignorePath, 'utf8')
@@ -41,52 +32,8 @@ async function getDockerIgnoreInstance(dir: string, defaults: string[] = []) {
 
 	return dockerIgnore({ ignorecase: false })
 		.add(['**/.git']) // Always ignore .git directories
-		.add(ignoreEntries);
-}
-
-/**
- * Create a tar stream from the base directory excluding those files
- * where `allowed(file)` is false.
- */
-async function tarDirectory(
-	basedir: string,
-	allowed: (somePath: string) => boolean,
-): Promise<Readable> {
-	const pack = tar.pack();
-
-	const addFromDir = async (dir: string) => {
-		const entries = await fs.readdir(dir);
-		for (const entry of entries) {
-			const newPath = path.resolve(dir, entry);
-			// Here we filter the things we don't want
-			if (!allowed(newPath)) {
-				continue;
-			}
-			// We use lstat here, otherwise an error will be
-			// thrown on a symbolic link
-			const stat = await fs.lstat(newPath);
-			if (stat.isDirectory()) {
-				await addFromDir(newPath);
-			} else {
-				pack.entry(
-					{
-						name: path.relative(basedir, newPath),
-						mode: stat.mode,
-						size: stat.size,
-					},
-					await fs.readFile(newPath),
-				);
-			}
-		}
-	};
-
-	// Start recursing through the directory tree
-	await addFromDir(basedir);
-
-	// Finalize the stream
-	pack.finalize();
-
-	return pack;
+		.add(ignoreEntries)
+		.createFilter();
 }
 
 // Source: https://github.com/balena-io/balena-cli/blob/f6d668684a6f5ea8102a964ca1942b242eaa7ae2/lib/utils/device/live.ts#L539-L547
@@ -129,12 +76,6 @@ function getMultiStateImageIDs(buildLog: string): string[] {
 export async function mochaGlobalSetup() {
 	const config = await Config();
 
-	// Set log levels
-	debug.enable(
-		// Append value of DEBUG env var if any
-		[config.logging, process.env.DEBUG].filter((s) => !!s).join(','),
-	);
-
 	// If the build is happening on a CI, skip this step
 	if (['1', 'true'].includes(process.env.MOCHAPOD_SKIP_SETUP ?? '0')) {
 		logger.debug('Skipping setup');
@@ -156,8 +97,14 @@ export async function mochaGlobalSetup() {
 	const builder = Builder.fromDockerode(docker);
 
 	// Create the tar archive
-	const ig = await getDockerIgnoreInstance(config.basedir, config.dockerIgnore);
-	const tarStream = await tarDirectory(config.basedir, ig.createFilter());
+	const allowed = await allowedFromDockerIgnore(
+		config.basedir,
+		config.dockerIgnore,
+	);
+
+	const tarStream = tar.pack(config.basedir, {
+		ignore: (name) => !allowed(name),
+	});
 
 	const bundle = new Resolve.Bundle(
 		tarStream,
@@ -262,16 +209,10 @@ export async function mochaGlobalSetup() {
 
 	// Try to start the container
 	logger.info('Running test suite inside a new container');
-	const [output] = await docker.run(
-		image,
-		// QUESTION: do we want to make the command configurable
-		['npm', 'run', 'test'],
-		process.stdout,
-		{
-			Env: ['MOCHAPOD_SKIP_SETUP=1'], // Skip the setup when running inside the container
-			HostConfig: { AutoRemove: true },
-		},
-	);
+	const [output] = await docker.run(image, config.testCommand, process.stdout, {
+		Env: ['MOCHAPOD_SKIP_SETUP=1'], // Skip the setup when running inside the container
+		HostConfig: { AutoRemove: true },
+	});
 
 	// Tests are run in the container, exit the process before mocha can
 	// run the local tests

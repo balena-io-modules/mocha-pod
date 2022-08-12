@@ -13,3 +13,9 @@ dockerHost: unix:///var/run/docker.sock
 #
 # Defaults to `false`
 buildOnly: true
+
+# This defines default configuration that
+# should apply to all testfs instances
+testfs:
+  filesystem:
+    /etc/unused.conf: 'just for testing'
