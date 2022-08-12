@@ -1,12 +1,3 @@
-export {
-	testfs,
-	File,
-	Directory,
-	TestFs,
-	TestFsSet,
-	TestFsUnset,
-	TestFsOpts,
-	TestFsConfig,
-} from './testfs';
-
-export * from './config';
+export { testfs } from './testfs';
+export * as TestFs from './testfs';
+export * as MochaPod from './config';

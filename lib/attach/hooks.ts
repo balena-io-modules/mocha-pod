@@ -4,10 +4,10 @@ import * as os from 'os';
 import * as path from 'path';
 
 import logger from '../logger';
-import { MochaPodConfig } from '../config';
-import testfs from '../testfs';
+import { Config } from '../config';
+import { testfs } from '../testfs';
 
-export class MochaPodError extends Error {}
+class MochaPodError extends Error {}
 
 export const mochaHooks = {
 	async beforeAll() {
@@ -51,7 +51,7 @@ export const mochaHooks = {
 		}
 
 		// Read config and set testfs default configuration
-		const config = await MochaPodConfig();
+		const config = await Config();
 		testfs.config(config.testfs);
 		logger.debug('Using Config', JSON.stringify(config, null, 2));
 	},

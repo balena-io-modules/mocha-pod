@@ -7,7 +7,7 @@ Mocha-Pod is a mocha plugin that takes over your `npm run test` execution, and r
 This ensures that anyone running the tests will have the same experience, no matter the development machine or if the tests are being
 ran as part of a CI build. Mocha-Pod also provides utilities to work with the filesystem, and ensure the state is reset between tests.
 
-- Easy setup. Just add `-r mocha-pod/attach` to your mocha command. It will use some sensible [configuration defaults](docs/modules.md#mochapodconfig).
+- Easy setup. Just add `-r mocha-pod/attach` to your mocha command. It will use some sensible [configuration defaults](docs/modules/MochaPod.md).
 - Additional [filesystem utilities to setup/destroy](#working-with-the-filesystem) the test environment.
 
 ## Requirements
@@ -64,13 +64,18 @@ and set the `MOCHAPOD_SKIP_SETUP=1` during this step (see our [Dockerfile](./Doc
 ## Working with the filesystem
 
 MochaPod also includes the [testfs](docs/modules.md#testfs) utility to interact with the container
-filesystem in order to be able to make changes and restore betweent tests.
+filesystem in order to be able to make changes and restore betweent tests. To use the module, import it into your
+test suite as follows
 
-For instance, the following prepares the filesystem with a new configuration under `/etc/test.conf`
+```typescript
+import { testfs } from 'mocha-pod';
+```
+
+For example, the following prepares the filesystem with a new configuration under `/etc/test.conf`
 
 ```typescript
 // Prepare a new test fs. The /etc/test.conf file will be created
-const tmp = await testfs({ '/etc/test.conf': 'logging=true' }).setup();
+const tmp = await testfs({ '/etc/test.conf': 'logging=true' }).enable();
 
 // The file should be available after setup
 expect(await fs.readFile('/etc/test.conf', 'utf-8')).to.equal('logging=true');
@@ -78,7 +83,7 @@ expect(await fs.readFile('/etc/test.conf', 'utf-8')).to.equal('logging=true');
 // RUN YOUR TESTS HERE
 
 // Restore the filesystem
-// Since test.conf did not exist before the setup(), this step removes
+// Since test.conf did not exist before the enable(), this step removes
 // the file
 await tmp.restore();
 
@@ -92,7 +97,7 @@ Using this module allows you to work with other tools outside node, for instance
 // This tells testfs to not create new files, but that the test will
 // modify existing system files that should be backed up
 const origHostname = await fs.readFile('/etc/hostname', 'utf-8');
-const tmp = await testfs({}, { keep: ['/etc/hostname'] }).setup();
+const tmp = await testfs({}, { keep: ['/etc/hostname'] }).enable();
 
 // Call a system program that modifies the file
 await exec('echo -n "myhostname" > /etc/hostname');
@@ -110,7 +115,7 @@ If the code you are testing creates any new temporary files, `testfs()` can hand
 
 ```typescript
 // This tells testfs that /etc/other.conf is created during the test
-const tmp = await testfs({}, { cleanup: ['/etc/other.conf'] }).setup();
+const tmp = await testfs({}, { cleanup: ['/etc/other.conf'] }).enable();
 
 // Create a file to a separate system program
 await exec('echo -n "debug=1" > /etc/other.conf');
@@ -124,7 +129,7 @@ await tmp.restore();
 await expect(fs.access('/etc/other.conf')).to.be.rejected;
 ```
 
-The [testfs](docs/modules.md#testfs) module works as follows. On setup the method will prepare the filesystem for testing by performing the following
+The [testfs](docs/modules/TestFs.md) module works as follows. On setup the method will prepare the filesystem for testing by performing the following
 operations.
 
 - Group the directory spec into existing/non-existing files. Existing files go into the keep list for backup and non-existing will go to the cleanup list.
@@ -136,7 +141,7 @@ On restore, the module will
 - delete any files in the cleanup list
 - restore the original filesystem files from the backup
 
-Note that attempts to call the setup function more than once will cause an exception.
+Note that attempts to call `enable()` more than once will cause an exception.
 
 **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
 in an inconsistent state if a crash happens before a `restore()` can be performed.
@@ -148,7 +153,7 @@ to prevent mocha pod from running the setup and going straight to running the te
 
 ## Configuration
 
-Additional configurations can be defined at the root of your project by creating a `.mochapodrc.yml` file. For see our API docs for a [full list of configuration options](docs/modules.md#mochapodconfig).
+Additional configurations can be defined at the root of your project by creating a `.mochapodrc.yml` file. For see our API docs for a [full list of configuration options](docs/modules/MochaPod.md).
 
 Additionally the following environment variables can be used to modify the behavior of Mocha-Pod
 

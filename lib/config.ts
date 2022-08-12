@@ -3,9 +3,9 @@ import * as YAML from 'js-yaml';
 import * as path from 'path';
 import logger from './logger';
 
-import { TestFsConfig } from './testfs';
+import * as TestFs from './testfs';
 
-export type MochaPodConfig = {
+export type Config = {
 	/**
 	 * Base directory where configuration files are looked for.
 	 * If a relative path is used, it is asumed to be relative to `process.cwd()`.
@@ -96,7 +96,7 @@ export type MochaPodConfig = {
 	 *
 	 * @defaultValue `{}`
 	 */
-	testfs: Partial<TestFsConfig>;
+	testfs: Partial<TestFs.Config>;
 
 	// Leave the type open so additional keys can be set
 	[key: string]: any;
@@ -105,7 +105,7 @@ export type MochaPodConfig = {
 /**
  * Get a representative device type from the given architecture
  */
-function inferDeviceTypeFormArch(arch: MochaPodConfig['deviceArch']) {
+function inferDeviceTypeFormArch(arch: Config['deviceArch']) {
 	switch (arch) {
 		case 'amd64':
 			return 'genericx86-64-ext';
@@ -125,7 +125,7 @@ function inferDeviceTypeFormArch(arch: MochaPodConfig['deviceArch']) {
 
 const MOCHAPOD_CONFIG =
 	process.env.MOCHAPOD_CONFIG ?? path.join(process.cwd(), '.mochapodrc.yml');
-const DEFAULTS: MochaPodConfig = {
+const DEFAULTS: Config = {
 	basedir: process.cwd(),
 	logging: 'mocha-pod,mocha-pod:error',
 	dockerHost: 'unix:///var/run/docker.sock',
@@ -171,20 +171,20 @@ function slugify(text: string) {
  * @param source    - full path to look for the configuration file. @defaultValue `path.join(process.cwd(), '.mochapodrc.yml')`
  * @returns         - updated mocha pod config including user overrides.
  */
-export async function MochaPodConfig(
-	overrides: Partial<MochaPodConfig> = {},
+export async function Config(
+	overrides: Partial<Config> = {},
 	source = MOCHAPOD_CONFIG,
-): Promise<MochaPodConfig> {
+): Promise<Config> {
 	const userconf = await fs
 		.readFile(source, 'utf8')
-		.then((contents) => YAML.load(contents) as Partial<MochaPodConfig>)
+		.then((contents) => YAML.load(contents) as Partial<Config>)
 		.catch((e) => {
 			if (e.code !== 'ENOENT') {
 				throw new Error(
 					`Error reading configuration from ${source}: ${e.message}`,
 				);
 			}
-			return {} as Partial<MochaPodConfig>;
+			return {} as Partial<Config>;
 		});
 
 	// Deduce the name from package.json
@@ -218,4 +218,4 @@ export async function MochaPodConfig(
 	return { ...conf, basedir: toAbsolute(conf.basedir), deviceType };
 }
 
-export default MochaPodConfig;
+export default Config;

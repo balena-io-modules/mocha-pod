@@ -9,7 +9,7 @@ import * as tar from 'tar-fs';
 
 import logger from '../logger';
 
-import { MochaPodConfig } from '../config';
+import { Config } from '../config';
 
 const { Builder } = build;
 
@@ -74,7 +74,7 @@ function getMultiStateImageIDs(buildLog: string): string[] {
  * before launching the test suite. All the setup for mocha-docker happens here.
  */
 export async function mochaGlobalSetup() {
-	const config = await MochaPodConfig();
+	const config = await Config();
 
 	// If the build is happening on a CI, skip this step
 	if (['1', 'true'].includes(process.env.MOCHAPOD_SKIP_SETUP ?? '0')) {

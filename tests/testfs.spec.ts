@@ -20,7 +20,7 @@ describe('testfs: integration tests', function () {
 		const tmp = await testfs({
 			// This file exists before
 			'/etc/test.conf': 'logging=true',
-		}).setup();
+		}).enable();
 
 		// The file should be available after setup
 		expect(await fs.readFile('/etc/test.conf', 'utf-8')).to.equal(
@@ -50,7 +50,7 @@ describe('testfs: integration tests', function () {
 		const tmp = await testfs({
 			// This file doesn't exist before the test
 			'/etc/other.conf': 'debug=1',
-		}).setup();
+		}).enable();
 
 		// The file should be available after setup
 		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
@@ -67,7 +67,7 @@ describe('testfs: integration tests', function () {
 
 	it('setup should backup any files identified in the `keep` list', async () => {
 		const origHostname = await fs.readFile('/etc/hostname', 'utf-8');
-		const tmp = await testfs({}, { keep: ['/etc/hostname'] }).setup();
+		const tmp = await testfs({}, { keep: ['/etc/hostname'] }).enable();
 
 		// Call a system program that modifies the file
 		await exec('echo -n "myhostname" > /etc/hostname');
@@ -87,7 +87,7 @@ describe('testfs: integration tests', function () {
 			'file should not exist before the test',
 		).to.be.rejected;
 
-		const tmp = await testfs({}, { cleanup: ['/etc/other.conf'] }).setup();
+		const tmp = await testfs({}, { cleanup: ['/etc/other.conf'] }).enable();
 
 		// Create a file to a separate system program
 		await exec('echo -n "debug=1" > /etc/other.conf');
@@ -113,13 +113,13 @@ describe('testfs: integration tests', function () {
 		await testfs({
 			// This file doesn't exist before the test
 			'/etc/other.conf': 'debug=1',
-		}).setup();
+		}).enable();
 
 		// The file should be available after setup
 		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
 
 		await expect(
-			testfs({ '/usr/etc/other.conf': 'debug=1' }).setup(),
+			testfs({ '/usr/etc/other.conf': 'debug=1' }).enable(),
 			'second call to setup() should fail',
 		).to.be.rejected;
 

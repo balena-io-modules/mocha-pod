@@ -1,8 +1,8 @@
 import { expect } from '~/testing';
 
-import { dir, flatten } from './testfs';
+import { dir, flatten } from './utils';
 
-describe('testfs: unit tests', function () {
+describe('testfs/utils: unit tests', function () {
 	describe('dir', () => {
 		it('normalizes an empty directory', () => {
 			expect(dir({})).to.deep.equal({});
