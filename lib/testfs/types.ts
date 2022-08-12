@@ -93,15 +93,15 @@ export interface TestFs {
 	 * **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
 	 * in an inconsistent state if a crash happens before a `restore()` can be performed.
 	 *
-	 * @param spec          - Directory specification with files that need to be
-	 *                        exist after set-up of the test fs. If the file exists previously
-	 *                        in the given location it will be added to the `keep` list for restoring later.
-	 *                        If it doesn't it will be added to the `cleanup` list to be removed during cleanup
-	 *                        @defaultValue `{}`
-	 * @param extra         - Additional options for the test fs. @defaultValue `{}`
-	 * @returns             - Disabled test fs configuration
+	 * @param spec - Directory specification with files that need to be
+	 *               exist after set-up of the test fs. If the file exists previously
+	 *               in the given location it will be added to the `keep` list for restoring later.
+	 *               If it doesn't it will be added to the `cleanup` list to be removed during cleanup
+	 *               @defaultValue `{}`
+	 * @param opts - Additional options for the test fs. @defaultValue `{}`
+	 * @returns    - Disabled test fs configuration
 	 */
-	(spec?: Directory, { rootdir, keep, cleanup }?: Partial<Opts>): Disabled;
+	(spec?: Directory, opts?: Partial<Opts>): Disabled;
 
 	/*
 	 * Set global defaults for all test fs instances
@@ -117,4 +117,13 @@ export interface TestFs {
 	 * {@link TestFs.Enabled.restore} on that instance.
 	 */
 	restore(): Promise<void>;
+
+	/**
+	 * Return any leftover backup files from previous invocations.
+	 *
+	 * If any leftovers exist prior to running {@link TestFs.Disabled.enable()}
+	 * it means that a previous invocation did not terminate succesfully and is not
+	 * safe to run the setup.
+	 */
+	leftovers(): Promise<string[]>;
 }

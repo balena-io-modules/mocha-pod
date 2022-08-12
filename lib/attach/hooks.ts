@@ -1,13 +1,10 @@
 import { promises as fs } from 'fs';
-import * as fg from 'fast-glob';
-import * as os from 'os';
-import * as path from 'path';
 
 import logger from '../logger';
 import { Config } from '../config';
 import { testfs } from '../testfs';
 
-class MochaPodError extends Error {}
+class HooksFailure extends Error {}
 
 export const mochaHooks = {
 	async beforeAll() {
@@ -33,16 +30,16 @@ export const mochaHooks = {
 			// Catch any errors during the previous step. Do not run if there
 			// are any doubts about this being a containerized enviroment
 			.catch(() => {
-				throw new MochaPodError(
+				throw new HooksFailure(
 					'It seems that you are in a containerized environment. Exiting to avoid damage.',
 				);
 			});
 
-		const backups = await fg(path.join(os.tmpdir(), 'mochapod-*.tar'));
-		if (backups.length > 0) {
-			throw new MochaPodError(
+		const crumbs = await testfs.leftovers();
+		if (crumbs.length > 0) {
+			throw new HooksFailure(
 				[
-					`Found leftover backup file (${backups[0]}) from previous test run.`,
+					`Found leftover testfs backup file(s): ${JSON.stringify(crumbs)})`,
 					'This probably means the test was interrupted before a call to',
 					'the restore operation could be completed. The system needs to be brought back to',
 					'its default state before running the test suite.',

@@ -105,7 +105,7 @@ function build(
 
 			logger.debug('Backing up files', toKeep);
 			const tarFile: string = await new Promise((resolve) => {
-				const filename = path.join(os.tmpdir(), `mochapod-${nanoid()}.tar`);
+				const filename = path.join(os.tmpdir(), `testfs-${nanoid()}.tar`);
 				const stream = tar
 					.pack(rootdir, {
 						entries: toKeep.map((entry) => path.relative(rootdir, entry)),
@@ -189,5 +189,13 @@ function build(
 	};
 }
 
-export const testfs: TestFs = Object.assign(build, { config, restore });
+async function leftovers(): Promise<string[]> {
+	return await fg(path.join(os.tmpdir(), 'testfs-*.tar'));
+}
+
+export const testfs: TestFs = Object.assign(build, {
+	config,
+	restore,
+	leftovers,
+});
 export default testfs;
