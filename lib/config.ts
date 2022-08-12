@@ -7,10 +7,10 @@ import { TestFsConfig } from './testfs';
 
 export type MochaPodConfig = {
 	/**
-	 * Base directory where configuration files are looked for
-	 * Defauts to `process.cwd()`
-	 *
+	 * Base directory where configuration files are looked for.
 	 * If a relative path is used, it is asumed to be relative to `process.cwd()`.
+	 *
+	 * @defaultValue `process.cwd()`
 	 */
 	basedir: string;
 
@@ -18,9 +18,8 @@ export type MochaPodConfig = {
 	 * Log namespaces to enable. This can also be controlled via the `DEBUG`
 	 * env var.
 	 *
-	 * Defaults to 'mocha-pod,mocha-pod:error'
-	 *
-	 * See: https://github.com/debug-js/debug
+	 * See https://github.com/debug-js/debug
+	 * @defaultValue `'mocha-pod,mocha-pod:error'`
 	 */
 	logging: string;
 
@@ -28,7 +27,7 @@ export type MochaPodConfig = {
 	 * Only perform the build step during the global mocha setup. If set to false
 	 * this will run `npm run test` inside a container after the build.
 	 *
-	 * Defaults to `false`
+	 * @defaultValue `false`
 	 */
 	buildOnly: boolean;
 
@@ -39,7 +38,7 @@ export type MochaPodConfig = {
 	 * - `tcp://192.168.1.105`
 	 * - `unix:///var/run/docker.sock`
 	 *
-	 * It defaults to unix:///var/run/docker.sock
+	 * @defaultValue `unix:///var/run/docker.sock`
 	 */
 	dockerHost: string;
 
@@ -47,26 +46,25 @@ export type MochaPodConfig = {
 	 * List of default dockerignore directives. These are overriden if a `.dockerignore` file is
 	 * defined at the project root.
 	 *
-	 * Defaults to:
-	 * `['!*\/*\//Dockerfile', '!*\/*\//Dockerfile.*\/', '*\/*\//node_modules', '*\/*\//build', '*\/*\//coverage' ]`
-	 *
 	 * NOTE: `*\/*\//.git` is always ignored
+	 *
+	 * @defaultValue `['!*\/*\//Dockerfile', '!*\/*\//Dockerfile.*\/', '*\/*\//node_modules', '*\/*\//build', '*\/*\//coverage' ]`
 	 */
 	dockerIgnore: string[];
 
 	/**
-	 * Extra options to pass to the image build
+	 * Extra options to pass to the image build.
+	 * See https://docs.docker.com/engine/api/v1.41/#tag/Image/operation/ImageBuild
 	 *
-	 * See: https://docs.docker.com/engine/api/v1.41/#tag/Image/operation/ImageBuild
-	 *
-	 * Defaults to `{}`
-	 * '
+	 * @defaultValue `{}`
 	 */
 	dockerBuildOpts: { [key: string]: any };
 
 	/**
 	 * The architecture of the system where the images will be
-	 * built and ran. Defaults to 'amd64'
+	 * built and ran.
+	 *
+	 * @defaultValue `amd64`
 	 */
 	deviceArch: 'amd64' | 'aarch64' | 'armv7hf' | 'i386' | 'rpi';
 
@@ -79,8 +77,7 @@ export type MochaPodConfig = {
 	deviceType: string;
 
 	/**
-	 * Name of the project where mocha-pod is being ran on
-	 *
+	 * Name of the project where mocha-pod is being ran on.
 	 * By default it will get the name from `package.json` at `basedir`, if it does
 	 * not exist, it will use `mocha-pod-testing`
 	 */
@@ -90,14 +87,14 @@ export type MochaPodConfig = {
 	 * Test command to use when running tests within a container. This will only be used
 	 * if `buildOnly` is set to `false`.
 	 *
-	 * Defaults to `["npm", "run", "test"]`
+	 * @defaultValue `["npm", "run", "test"]`
 	 */
 	testCommand: string[];
 
 	/**
 	 * TestFs configuration to be used globally for all tests
 	 *
-	 * @default `{}`
+	 * @defaultValue `{}`
 	 */
 	testfs: Partial<TestFsConfig>;
 
@@ -166,10 +163,18 @@ function slugify(text: string) {
 		.replace(/\-\-+/g, '-'); // Replace multiple - with single -
 }
 
+/**
+ * Loads a mocha-pod configuration from the given source file and
+ * overrides the default values
+ *
+ * @param overrides - additional overrides. These take precedence over `.mochapodrc.yml`
+ * @param source    - full path to look for the configuration file. @defaultValue `path.join(process.cwd(), '.mochapodrc.yml')`
+ * @returns         - updated mocha pod config including user overrides.
+ */
 export async function MochaPodConfig(
 	overrides: Partial<MochaPodConfig> = {},
 	source = MOCHAPOD_CONFIG,
-) {
+): Promise<MochaPodConfig> {
 	const userconf = await fs
 		.readFile(source, 'utf8')
 		.then((contents) => YAML.load(contents) as Partial<MochaPodConfig>)

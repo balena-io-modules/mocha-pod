@@ -66,7 +66,6 @@ describe('testfs: integration tests', function () {
 	});
 
 	it('setup should backup any files identified in the `keep` list', async () => {
-		// The file should not exist before the test
 		const origHostname = await fs.readFile('/etc/hostname', 'utf-8');
 		const tmp = await testfs({}, { keep: ['/etc/hostname'] }).setup();
 

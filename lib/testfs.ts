@@ -37,11 +37,11 @@ const isFile = (x: unknown): x is File =>
 const isDirectory = (x: File | Directory): x is Directory =>
 	x != null && !isFile(x);
 
-interface TestFsExtra {
+export interface TestFsOpts {
 	/**
-	 * Directory to use as base for the spec and globs
+	 * Directory to use as base for the directory specification and glob search.
 	 *
-	 * Default: '/'
+	 * @defaultValue `/`
 	 */
 	readonly rootdir: string;
 	/**
@@ -49,7 +49,7 @@ interface TestFsExtra {
 	 * identifying any files that should be backed up prior to setting up the
 	 * filesystem. Any files that will be modified during the test should go here
 	 *
-	 * Default: []
+	 * @defaultValue `[]`
 	 */
 	readonly keep: string[];
 
@@ -58,7 +58,7 @@ interface TestFsExtra {
 	 * identifying  files that should be removed during the restore step.
 	 * Add here any temporary files created during the test that should be cleaned up.
 	 *
-	 * Default: []
+	 * @defaultValue `[]`
 	 */
 	readonly cleanup: string[];
 }
@@ -75,9 +75,11 @@ export interface TestFsSet {
 	restore(): Promise<TestFsUnset>;
 }
 
-export interface TestFsConfig extends TestFsExtra {
+export interface TestFsConfig extends TestFsOpts {
 	/**
 	 * Additional directory specification to be passed to `testfs()`
+	 *
+	 * @defaultValue `{}`
 	 */
 	readonly filesystem: Directory;
 }
@@ -383,45 +385,13 @@ function config(conf: Partial<TestFsConfig>): void {
 	defaults = { ...defaults, ...conf };
 }
 
-/**
- * Create a TmpFs configuration from the given directory spec.
- *
- * On setup the method will prepare the filesystem for testing by performing the following
- * operations.
- *
- * - Group the directory spec into existing/non-existing files. Existing files go into the keep list for backup and non-existing will go to the cleanup list.
- * - Create a backup of all files matching the keep list
- * - Replace all files from the directory spec into the filesystem.
- *
- *  Note that attempts to call the setup function more than once will cause an exeption.
- *
- * **IMPORTANT** don't use this module in a real system, specially with admin permissions.
- * If system files are provided in the directory, the module will overwrite them and a crash before
- * a `restore()` is completed may leave the system in an inconsistent state. This is designed to use within a throwaway
- * system such as a docker container.
- *
- *
- * @param spec           - Directory specification with files that need to be
- *                         exist after set-up of the test fs. If the file exists previously
- *                         in the given location it will be added to the `keep` list for restoring later.
- *                         If it doesn't it will be added to the `cleanup` list to be removed during cleanup
- * @param config         - Additional options for the test fs
- * @param config.rootdir - Root directory for the directory spec. Defaults to '/'
- * @param config.keep    - List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
- *                         identifying any files that should be backed up prior to setting up the
- *                         filesystem. Any files that will be modified during the test should go here
- * @param config.cleanup - List of files or [globbing patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax)
- *                         identifying  files that should be removed during the restore step.
- *                         Add here any temporary files created during the test that should be cleaned up.
- * @returns              - Unset TmpFs configuration
- */
-function TestFs(
+function build(
 	spec: Directory = {},
 	{
 		rootdir = defaults.rootdir,
 		keep = [],
 		cleanup = [],
-	}: Partial<TestFsExtra> = {},
+	}: Partial<TestFsOpts> = {},
 ): TestFsUnset {
 	keep = [...defaults.keep, ...keep];
 	cleanup = [...defaults.cleanup, ...cleanup];
@@ -472,7 +442,7 @@ function TestFs(
 				backup: tarFile,
 				async restore() {
 					if (isRestored) {
-						return TestFs(spec, { keep, cleanup });
+						return build(spec, { keep, cleanup });
 					}
 
 					// Cleanup the files form the cleanup glob
@@ -504,7 +474,7 @@ function TestFs(
 					await lock.release();
 
 					// Return a new instance from the original option list
-					return TestFs(spec, { keep, cleanup });
+					return build(spec, { keep, cleanup });
 				},
 			};
 
@@ -540,7 +510,7 @@ function TestFs(
 
 export interface TestFs {
 	/**
-	 * Create a TmpFs configuration from the given directory spec.
+	 * Create a testfs configuration from the given directory spec.
 	 *
 	 * On setup the method will prepare the filesystem for testing by performing the following
 	 * operations.
@@ -549,13 +519,10 @@ export interface TestFs {
 	 * - Create a backup of all files matching the keep list
 	 * - Replace all files from the directory spec into the filesystem.
 	 *
-	 *  Note that attempts to call the setup function more than once will cause an exeption.
+	 * Note that attempts to call the setup function more than once will cause an exception.
 	 *
-	 * **IMPORTANT** don't use this module in a real system, specially with admin permissions.
-	 * If system files are provided in the directory, the module will overwrite them and a crash before
-	 * a `restore()` is completed may leave the system in an inconsistent state. This is designed to use within a throwaway
-	 * system such as a docker container.
-	 *
+	 * **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
+	 * in an inconsistent state if a crash happens before a `restore()` can be performed.
 	 *
 	 * @param spec          - Directory specification with files that need to be
 	 *                        exist after set-up of the test fs. If the file exists previously
@@ -571,7 +538,7 @@ export interface TestFs {
 	 *                        Add here any temporary files created during the test that should be cleaned up.
 	 * @returns             - Unset TmpFs configuration
 	 */
-	(spec?: Directory, extra?: Partial<TestFsExtra>): TestFsUnset;
+	(spec?: Directory, extra?: Partial<TestFsOpts>): TestFsUnset;
 
 	/*
 	 * Set global defaults for all test fs instances
@@ -586,5 +553,5 @@ export interface TestFs {
 	restore(): Promise<void>;
 }
 
-export const testfs: TestFs = Object.assign(TestFs, { config, restore });
+export const testfs: TestFs = Object.assign(build, { config, restore });
 export default testfs;
