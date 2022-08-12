@@ -5,6 +5,15 @@ reviewers: 1
 # the tests to run at part of the image build step
 docker:
   publish: false
+  builds:
+    - dockerfile: Dockerfile
+      docker_repo: mocha-pod:node-latest
+      path: .
+      publish: false
+    - dockerfile: Dockerfile.node-12
+      docker_repo: mocha-pod:node-12
+      publish: false
+      path: .
 
 # Publish npm module (TODO) but do not test
 # as the tests are ran with the docker build
