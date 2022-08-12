@@ -35,6 +35,7 @@
 	},
 	"scripts": {
 		"clean": "rimraf build",
+		"typedoc": "rimraf docs && typedoc",
 		"build": "npm run clean && tsc --project tsconfig.release.json",
 		"lint": "balena-lint --typescript lib tests",
 		"lint-fix": "balena-lint --typescript --fix lib tests",
@@ -64,6 +65,8 @@
 		"rimraf": "^3.0.2",
 		"ts-node": "^10.9.1",
 		"tsconfig-paths": "^4.0.0",
+		"typedoc": "^0.23.10",
+		"typedoc-plugin-markdown": "^3.13.4",
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {

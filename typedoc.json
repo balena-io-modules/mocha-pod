@@ -1,0 +1,5 @@
+{
+	"entryPoints": ["./lib/index.ts"],
+	"plugin": "typedoc-plugin-markdown",
+	"namedAnchors": true
+}
