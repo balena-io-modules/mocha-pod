@@ -38,4 +38,4 @@ options.
 
 #### Defined in
 
-[testfs/types.ts:5](https://github.com/balena-io-modules/mocha-pod/blob/8513974/lib/testfs/types.ts#L5)
+[testfs/types.ts:5](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L5)

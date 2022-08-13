@@ -39,7 +39,7 @@ Or with typescript and [ts-node](https://www.npmjs.com/package/ts-node).
 ```
 // inside package.json
 "scripts": {
-"test": "mocha -r ts-node/register -r lib/attach --reporter spec tests/**/*.spec.ts",
+"test": "mocha -r ts-node/register -r mocha-pod/attach --reporter spec tests/**/*.spec.ts",
 }
 ```
 
