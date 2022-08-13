@@ -97,8 +97,7 @@ export interface TestFs {
 	 *               exist after set-up of the test fs. If the file exists previously
 	 *               in the given location it will be added to the `keep` list for restoring later.
 	 *               If it doesn't it will be added to the `cleanup` list to be removed during cleanup
-	 *               @defaultValue `{}`
-	 * @param opts - Additional options for the test fs. @defaultValue `{}`
+	 * @param opts - Additional options for the test fs.
 	 * @returns    - Disabled test fs configuration
 	 */
 	(spec?: Directory, opts?: Partial<Opts>): Disabled;
@@ -121,7 +120,7 @@ export interface TestFs {
 	/**
 	 * Return any leftover backup files from previous invocations.
 	 *
-	 * If any leftovers exist prior to running {@link TestFs.Disabled.enable()}
+	 * If any leftovers exist prior to running {@link TestFs.Disabled.enable}
 	 * it means that a previous invocation did not terminate succesfully and is not
 	 * safe to run the setup.
 	 */

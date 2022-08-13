@@ -18,14 +18,6 @@ operations.
 **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
 in an inconsistent state if a crash happens before a `restore()` can be performed.
 
-**`Default Value`**
-
-`{}`
-
-**`Default Value`**
-
-`{}`
-
 #### Parameters
 
 | Name | Type | Description |
@@ -41,7 +33,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:104](https://github.com/balena-io-modules/mocha-pod/blob/8513974/lib/testfs/types.ts#L104)
+[testfs/types.ts:103](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L103)
 
 ## Table of contents
 
@@ -69,7 +61,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:111](https://github.com/balena-io-modules/mocha-pod/blob/8513974/lib/testfs/types.ts#L111)
+[testfs/types.ts:110](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L110)
 
 ___
 
@@ -79,7 +71,7 @@ ___
 
 Return any leftover backup files from previous invocations.
 
-If any leftovers exist prior to running [()](TestFs.Disabled.md#enable)
+If any leftovers exist prior to running [enable](TestFs.Disabled.md#enable)
 it means that a previous invocation did not terminate succesfully and is not
 safe to run the setup.
 
@@ -89,7 +81,7 @@ safe to run the setup.
 
 #### Defined in
 
-[testfs/types.ts:128](https://github.com/balena-io-modules/mocha-pod/blob/8513974/lib/testfs/types.ts#L128)
+[testfs/types.ts:127](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L127)
 
 ___
 
@@ -108,4 +100,4 @@ This function looks for a currently enabled instance of a test filesystem and ca
 
 #### Defined in
 
-[testfs/types.ts:119](https://github.com/balena-io-modules/mocha-pod/blob/8513974/lib/testfs/types.ts#L119)
+[testfs/types.ts:118](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L118)

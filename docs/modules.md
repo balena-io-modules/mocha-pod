@@ -27,14 +27,6 @@ operations.
 **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
 in an inconsistent state if a crash happens before a `restore()` can be performed.
 
-**`Default Value`**
-
-`{}`
-
-**`Default Value`**
-
-`{}`
-
 #### Parameters
 
 | Name | Type | Description |
@@ -50,4 +42,4 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:104](https://github.com/balena-io-modules/mocha-pod/blob/8513974/lib/testfs/types.ts#L104)
+[testfs/types.ts:103](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L103)
