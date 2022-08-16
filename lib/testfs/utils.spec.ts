@@ -1,6 +1,8 @@
 import { expect } from '~/testing';
 
-import { dir, flatten } from './utils';
+import { promises as fs } from 'fs';
+import * as mock from 'mock-fs';
+import { dir, flatten, replace } from './utils';
 
 describe('testfs/utils: unit tests', function () {
 	describe('dir', () => {
@@ -175,6 +177,90 @@ describe('testfs/utils: unit tests', function () {
 					'/dir': { otherfile: 'value' },
 				}),
 			).to.deep.equal({ '/dir/hasfile': 'value', '/dir/otherfile': 'value' });
+		});
+	});
+
+	describe('replace', () => {
+		it('writes files at the top level directory', async () => {
+			mock({ '/etc': {} });
+
+			await replace(
+				{ 'a.conf': 'FIRST FILE', 'b.conf': 'SECOND FILE' },
+				'/etc',
+			);
+
+			expect(await fs.readFile('/etc/a.conf', 'utf8')).to.equal('FIRST FILE');
+			expect(await fs.readFile('/etc/b.conf', 'utf8')).to.equal('SECOND FILE');
+
+			mock.restore();
+		});
+
+		it('creates parent directory if it does not exist', async () => {
+			mock({ '/etc': {} });
+
+			await replace(
+				{
+					'/service-a/a.conf': 'FIRST FILE',
+					'/service-b/b.conf': 'SECOND FILE',
+				},
+				'/etc',
+			);
+
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+			expect(await fs.readFile('/etc/service-b/b.conf', 'utf8')).to.equal(
+				'SECOND FILE',
+			);
+
+			mock.restore();
+		});
+
+		it('creates directories recursively as necessary', async () => {
+			mock({ '/etc': {} });
+
+			await replace(
+				{
+					'/service-a': { 'a.conf': 'FIRST FILE' },
+					'/service-b': { 'subdir/b.conf': 'SECOND FILE' },
+				},
+				'/etc',
+			);
+
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+			expect(
+				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
+			).to.equal('SECOND FILE');
+
+			mock.restore();
+		});
+
+		it('replaces file if it already exists', async () => {
+			mock({
+				'/etc': {
+					'service-a': { 'a.conf': 'FIRST FILE OLD' },
+					'service-b': { 'subdir/b.conf': 'SECOND FILE OLD' },
+				},
+			});
+
+			await replace(
+				{
+					'/service-a': { 'a.conf': 'FIRST FILE' },
+					'/service-b': { 'subdir/b.conf': 'SECOND FILE' },
+				},
+				'/etc',
+			);
+
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+			expect(
+				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
+			).to.equal('SECOND FILE');
+
+			mock.restore();
 		});
 	});
 });

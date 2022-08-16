@@ -230,8 +230,29 @@ export function flatten(root: Directory): Directory {
 export async function replace(spec: Directory, parent = '/') {
 	// Create the parent if it doesn't exist
 	if (parent !== '/') {
-		await fs.mkdir(parent);
+		await fs.mkdir(parent).catch(() => {
+			/** ignore */
+		});
 	}
+
+	// Get the list of unique base directories for the given files
+	const uniqueDirs = [
+		...new Set(
+			files(spec)
+				.map((file) => path.dirname(file))
+				.filter((dirname) => dirname !== '.' && dirname !== '/')
+				.map((dirname) => dirname),
+		),
+	];
+
+	// Create all parent directories
+	await Promise.all(
+		uniqueDirs.map((dirname) =>
+			fs.mkdir(path.join(parent, dirname), { recursive: true }).catch(() => {
+				/** ignore */
+			}),
+		),
+	);
 
 	// Write all files first
 	// TODO: this writes in parallel, if necessary we might want to write
@@ -248,6 +269,6 @@ export async function replace(spec: Directory, parent = '/') {
 
 	// Write child directories sequentially (depth-first)
 	for (const dirPath of dirs(spec)) {
-		await replace(spec[dirPath] as Directory, dirPath);
+		await replace(spec[dirPath] as Directory, path.join(parent, dirPath));
 	}
 }
