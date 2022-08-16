@@ -46,13 +46,13 @@ Renames and re-exports [Config](MochaPod.md#config)
 | `logging` | `string` | Log namespaces to enable. This can also be controlled via the `DEBUG` env var.  See https://github.com/debug-js/debug  **`Default Value`**  `'mocha-pod,mocha-pod:error'` |
 | `projectName` | `string` | Name of the project where mocha-pod is being ran on. By default it will get the name from `package.json` at `basedir`, if it does not exist, it will use `mocha-pod-testing` |
 | `testCommand` | `string`[] | Test command to use when running tests within a container. This will only be used if `buildOnly` is set to `false`.  **`Default Value`**  `["npm", "run", "test"]` |
-| `testfs` | `Partial`<[`Config`](../interfaces/TestFs.Config.md)\> | TestFs configuration to be used globally for all tests  **`Default Value`**  `{}` |
+| `testfs` | `Partial`<`Omit`<[`Config`](../interfaces/TestFs.Config.md), ``"basedir"``\>\> | TestFs configuration to be used globally for all tests.  **`Default Value`**  `{}` |
 
 #### Defined in
 
-[config.ts:174](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/config.ts#L174)
+[config.ts:174](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/config.ts#L174)
 
-[config.ts:8](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/config.ts#L8)
+[config.ts:8](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/config.ts#L8)
 
 ## Functions
 
@@ -82,4 +82,4 @@ overrides the default values
 
 #### Defined in
 
-[config.ts:174](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/config.ts#L174)
+[config.ts:174](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/config.ts#L174)

@@ -33,13 +33,15 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:103](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L103)
+[testfs/types.ts:154](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L154)
 
 ## Table of contents
 
 ### Methods
 
 - [config](TestFs.TestFs.md#config)
+- [file](TestFs.TestFs.md#file)
+- [from](TestFs.TestFs.md#from)
 - [leftovers](TestFs.TestFs.md#leftovers)
 - [restore](TestFs.TestFs.md#restore)
 
@@ -61,7 +63,55 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:110](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L110)
+[testfs/types.ts:161](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L161)
+
+___
+
+### <a id="file" name="file"></a> file
+
+▸ **file**(`f`): [`FileSpec`](TestFs.FileSpec.md)
+
+Create a file specification from a partial file description
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `f` | `string` \| `Buffer` \| [`WithOptional`](../modules/TestFs.md#withoptional)<[`FileSpec`](TestFs.FileSpec.md), keyof [`FileOpts`](TestFs.FileOpts.md)\> | file contents or partial file specification |
+
+#### Returns
+
+[`FileSpec`](TestFs.FileSpec.md)
+
+full file specification with defaults set
+
+#### Defined in
+
+[testfs/types.ts:186](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L186)
+
+___
+
+### <a id="from" name="from"></a> from
+
+▸ **from**(`f`): [`FileRef`](TestFs.FileRef.md)
+
+Create a file reference to an existing file
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `f` | `string` \| [`WithOptional`](../modules/TestFs.md#withoptional)<[`FileRef`](TestFs.FileRef.md), keyof [`FileOpts`](TestFs.FileOpts.md)\> | absolute or relative file path to create the reference from, if a relative path is given, `process.cwd()` will be            used as basedir. This parameter can also be a partial FileRef specification |
+
+#### Returns
+
+[`FileRef`](TestFs.FileRef.md)
+
+full file reference specification with defaults set
+
+#### Defined in
+
+[testfs/types.ts:195](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L195)
 
 ___
 
@@ -81,7 +131,7 @@ safe to run the setup.
 
 #### Defined in
 
-[testfs/types.ts:127](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L127)
+[testfs/types.ts:178](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L178)
 
 ___
 
@@ -100,4 +150,4 @@ This function looks for a currently enabled instance of a test filesystem and ca
 
 #### Defined in
 
-[testfs/types.ts:118](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L118)
+[testfs/types.ts:169](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L169)
