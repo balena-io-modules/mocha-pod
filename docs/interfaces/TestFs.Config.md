@@ -14,12 +14,33 @@
 
 ### Properties
 
+- [basedir](TestFs.Config.md#basedir)
 - [cleanup](TestFs.Config.md#cleanup)
 - [filesystem](TestFs.Config.md#filesystem)
 - [keep](TestFs.Config.md#keep)
 - [rootdir](TestFs.Config.md#rootdir)
 
 ## Properties
+
+### <a id="basedir" name="basedir"></a> basedir
+
+• `Readonly` **basedir**: `string`
+
+Directory to use as base for search when calling [from](TestFs.TestFs.md#from)
+
+**`Default Value`**
+
+given by the configuration in `.mochapodrc.yml`
+
+#### Inherited from
+
+[Opts](TestFs.Opts.md).[basedir](TestFs.Opts.md#basedir)
+
+#### Defined in
+
+[testfs/types.ts:65](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L65)
+
+___
 
 ### <a id="cleanup" name="cleanup"></a> cleanup
 
@@ -39,7 +60,7 @@ Add here any temporary files created during the test that should be cleaned up.
 
 #### Defined in
 
-[testfs/types.ts:38](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L38)
+[testfs/types.ts:89](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L89)
 
 ___
 
@@ -55,7 +76,7 @@ Additional directory specification to be passed to `testfs()`
 
 #### Defined in
 
-[testfs/types.ts:68](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L68)
+[testfs/types.ts:119](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L119)
 
 ___
 
@@ -77,7 +98,7 @@ filesystem. Any files that will be modified during the test should go here
 
 #### Defined in
 
-[testfs/types.ts:29](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L29)
+[testfs/types.ts:80](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L80)
 
 ___
 
@@ -97,4 +118,4 @@ Directory to use as base for the directory specification and glob search.
 
 #### Defined in
 
-[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/66ae657/lib/testfs/types.ts#L21)
+[testfs/types.ts:72](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L72)

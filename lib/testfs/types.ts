@@ -1,8 +1,53 @@
 /**
- * Describe a file contents and configuration
- * options.
+ * Utility type to mark only some properties of a given type as optional
  */
-export type File = string | Buffer;
+export type WithOptional<T, K extends keyof T> = Omit<T, K> &
+	Partial<Pick<T, K>>;
+
+/**
+ * Describe a file contents
+ */
+export type FileContents = string | Buffer;
+
+/**
+ * Generic file options
+ */
+export interface FileOpts {
+	/**
+	 * Last access time for the file.
+	 *
+	 * @defaultValue `new Date()`
+	 */
+	atime: Date;
+
+	/**
+	 * Last modification time for the file.
+	 *
+	 * @defaultValue `new Date()`
+	 */
+	mtime: Date;
+}
+
+export interface FileSpec extends FileOpts {
+	/**
+	 * Contents of the file
+	 */
+	contents: FileContents;
+}
+
+/**
+ * Utility interface to indicate that a test file contents must
+ * be loaded from an existing file in the filesystem
+ */
+export interface FileRef extends FileOpts {
+	/**
+	 * Absolute or relative path to read the file from. If a relative
+	 * path is given, `process.cwd()` will be used as basedir
+	 */
+	from: string;
+}
+
+export type File = FileContents | FileSpec | FileRef;
 
 /**
  * A directory is a recursive data structure of
@@ -13,6 +58,12 @@ export interface Directory {
 }
 
 export interface Opts {
+	/**
+	 * Directory to use as base for search when calling {@link TestFs.from}
+	 * @defaultValue given by the configuration in `.mochapodrc.yml`
+	 */
+	readonly basedir: string;
+
 	/**
 	 * Directory to use as base for the directory specification and glob search.
 	 *
@@ -125,4 +176,21 @@ export interface TestFs {
 	 * safe to run the setup.
 	 */
 	leftovers(): Promise<string[]>;
+
+	/**
+	 * Create a file specification from a partial file description
+	 *
+	 * @param f - file contents or partial file specification
+	 * @return full file specification with defaults set
+	 */
+	file(f: string | Buffer | WithOptional<FileSpec, keyof FileOpts>): FileSpec;
+
+	/**
+	 * Create a file reference to an existing file
+	 *
+	 * @param f - absolute or relative file path to create the reference from, if a relative path is given, `process.cwd()` will be
+	 *            used as basedir. This parameter can also be a partial FileRef specification
+	 * @return full file reference specification with defaults set
+	 */
+	from(f: string | WithOptional<FileRef, keyof FileOpts>): FileRef;
 }

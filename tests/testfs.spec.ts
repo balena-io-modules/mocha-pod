@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { testfs } from '~/mocha-pod';
 import { promises as fs } from 'fs';
 
@@ -132,6 +133,199 @@ describe('testfs: integration tests', function () {
 		await expect(
 			fs.access('/etc/other.conf'),
 			'system should be restored by a setup failure',
+		).to.be.rejected;
+	});
+
+	it('setup should allow to reference files through the directory spec', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const tmp = await testfs({
+			// Create a file reference
+			'/etc/other.conf': testfs.from('tests/data/dummy.conf'),
+		}).enable();
+
+		// The file should be available after setup
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal(
+			await fs.readFile(
+				path.join(process.cwd(), 'tests/data/dummy.conf'),
+				'utf8',
+			),
+		);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+	});
+
+	it('setup should allow to reference files and set mtime through the directory spec', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const mtime = new Date('2022-08-16T17:00:00Z');
+		const tmp = await testfs({
+			// Create a file reference
+			'/etc/other.conf': testfs.from({ from: 'tests/data/dummy.conf', mtime }),
+		}).enable();
+
+		// The file should be available after setup
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal(
+			await fs.readFile(
+				path.join(process.cwd(), 'tests/data/dummy.conf'),
+				'utf8',
+			),
+		);
+		// The file should be available after setup and have the proper time
+		const fStat = await fs.stat('/etc/other.conf');
+		expect(fStat.mtime).to.deep.equal(mtime);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+	});
+
+	it('setup should allow to reference files and set atime through the directory spec', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const atime = new Date('2022-08-16T17:00:00Z');
+		const tmp = await testfs({
+			// Create a file reference
+			'/etc/other.conf': testfs.from({ from: 'tests/data/dummy.conf', atime }),
+		}).enable();
+
+		// The file should be available after setup and have the proper time
+		const fStat = await fs.stat('/etc/other.conf');
+		expect(fStat.atime).to.deep.equal(atime);
+
+		// The file should be available after setup
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal(
+			await fs.readFile(
+				path.join(process.cwd(), 'tests/data/dummy.conf'),
+				'utf8',
+			),
+		);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+	});
+
+	it('setup should allow to reference files via absolute path through the directory spec', async () => {
+		// Create a dummy test file.
+		await fs
+			.open('/tmp/dummy.conf', 'w')
+			.then((handle) =>
+				handle.writeFile('logging=false').finally(() => handle.close()),
+			);
+
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const tmp = await testfs({
+			// Create a file reference
+			'/etc/other.conf': testfs.from('/tmp/dummy.conf'),
+		}).enable();
+
+		// The file should be available after setup
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal(
+			'logging=false',
+		);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+	});
+
+	it('setup should allow to configure file last access time through the directory spec', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const atime = new Date('2022-08-16T17:00:00Z');
+		const tmp = await testfs({
+			// Create a file with a set atime
+			'/etc/other.conf': testfs.file({ contents: 'loglevel=debug', atime }),
+		}).enable();
+
+		// The file should be available after setup and have the proper time
+		const fStat = await fs.stat('/etc/other.conf');
+		expect(fStat.atime).to.deep.equal(atime);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+	});
+
+	it('setup should allow to configure file last modification time through the directory spec', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const mtime = new Date('2022-08-16T17:00:00Z');
+		const tmp = await testfs({
+			// Create a file with a set atime
+			'/etc/other.conf': testfs.file({ contents: 'loglevel=debug', mtime }),
+		}).enable();
+
+		// The file should be available after setup and have the proper time
+		const fStat = await fs.stat('/etc/other.conf');
+		expect(fStat.mtime).to.deep.equal(mtime);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
 		).to.be.rejected;
 	});
 });

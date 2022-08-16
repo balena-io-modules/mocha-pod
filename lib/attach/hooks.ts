@@ -49,7 +49,7 @@ export const mochaHooks = {
 
 		// Read config and set testfs default configuration
 		const config = await Config();
-		testfs.config(config.testfs);
+		testfs.config({ basedir: config.basedir, ...config.testfs });
 		logger.debug('Using Config', JSON.stringify(config, null, 2));
 	},
 

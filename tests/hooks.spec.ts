@@ -18,6 +18,10 @@ describe('hooks: integration tests', function () {
 			fs.access('/etc/unused.conf'),
 			'global testfs files should not exist before testfs.setup()',
 		).to.be.rejected;
+		await expect(
+			fs.access('/etc/extra.conf'),
+			'global testfs files should not exist before testfs.setup()',
+		).to.be.rejected;
 
 		const tmp = await testfs().enable();
 
@@ -25,12 +29,19 @@ describe('hooks: integration tests', function () {
 		expect(await fs.readFile('/etc/unused.conf', 'utf-8')).to.equal(
 			'just for testing',
 		);
+		expect(await fs.readFile('/etc/extra.conf', 'utf-8')).to.equal(
+			await fs.readFile('tests/data/extra.conf', 'utf-8'),
+		);
 
 		await tmp.restore();
 
 		await expect(
 			fs.access('/etc/unused.conf'),
 			'global testfs files should not exist after testfs.restore()',
+		).to.be.rejected;
+		await expect(
+			fs.access('/etc/extra.conf'),
+			'global testfs files should not exist before testfs.setup()',
 		).to.be.rejected;
 	});
 });

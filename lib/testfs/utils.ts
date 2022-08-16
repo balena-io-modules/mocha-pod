@@ -1,14 +1,44 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 
-import { Directory, File } from './types';
+import {
+	Directory,
+	File,
+	FileRef,
+	FileContents,
+	FileSpec,
+	FileOpts,
+	WithOptional,
+} from './types';
+
+const isString = (x: unknown): x is string =>
+	x != null && (typeof x === 'string' || x instanceof String);
+
+/**
+ * Type guard to check if object is a file contents
+ */
+export const isFileContents = (x: unknown): x is FileContents =>
+	x != null && (isString(x) || Buffer.isBuffer(x));
+
+/**
+ * Type guard to check if a object is a file reference
+ */
+export const isFileRef = (x: unknown): x is FileRef =>
+	x != null && typeof x === 'object' && isString((x as { from: any }).from);
+
+/**
+ * Type guard to check if an object is a file specification
+ */
+export const isFileSpec = (x: unknown): x is FileSpec =>
+	x != null &&
+	typeof x === 'object' &&
+	isFileContents((x as { contents: any }).contents);
 
 /**
  * Type guard to idenfity an object as a file
  */
 export const isFile = (x: unknown): x is File =>
-	x != null &&
-	(typeof x === 'string' || x instanceof String || Buffer.isBuffer(x));
+	(x != null && isFileContents(x)) || isFileRef(x) || isFileSpec(x);
 
 /**
  * Type guard to identify an object as a directory
@@ -148,7 +178,7 @@ export function dir(root: Directory): Directory {
  * Get all directories at the top level of the given
  * directory spec
  */
-export function dirs(root: Directory): string[] {
+export function dirNames(root: Directory): string[] {
 	return Object.keys(root).filter((file) => isDirectory(root[file]));
 }
 
@@ -156,8 +186,40 @@ export function dirs(root: Directory): string[] {
  * Get all files at the top level of the given
  * directory spec
  */
-export function files(root: Directory): string[] {
+export function fileNames(root: Directory): string[] {
 	return Object.keys(root).filter((file) => isFile(root[file]));
+}
+
+/**
+ * Create a file specification from a partial spec
+ */
+export function fileSpec(
+	f: string | Buffer | WithOptional<FileSpec, keyof FileOpts>,
+): FileSpec {
+	const now = new Date();
+	if (isFileContents(f)) {
+		return { contents: f, atime: now, mtime: now };
+	}
+
+	return { mtime: now, atime: now, ...f };
+}
+
+/**
+ * Create a file specification from a partial ref
+ */
+export function fileRef(
+	f: string | WithOptional<FileRef, keyof FileOpts>,
+	basedir = process.cwd(),
+): FileRef {
+	const now = new Date();
+	if (isString(f)) {
+		if (!path.isAbsolute(f)) {
+			f = path.resolve(basedir, f);
+		}
+		return { from: f, mtime: now, atime: now };
+	}
+
+	return { mtime: now, atime: now, ...f };
 }
 
 /**
@@ -165,14 +227,14 @@ export function files(root: Directory): string[] {
  */
 function flatList(root: Directory, parent = '/'): Array<[string, File]> {
 	return (
-		files(root)
+		fileNames(root)
 			// Add top level files to the list
 			.map((file): [string, File] => [
 				path.resolve(parent, file),
 				root[file] as File,
 			])
 			.concat(
-				dirs(root)
+				dirNames(root)
 					// For each dir, calculate the list of files
 					.map((dirname) =>
 						flatList(root[dirname] as Directory, path.resolve(parent, dirname)),
@@ -230,24 +292,65 @@ export function flatten(root: Directory): Directory {
 export async function replace(spec: Directory, parent = '/') {
 	// Create the parent if it doesn't exist
 	if (parent !== '/') {
-		await fs.mkdir(parent);
+		await fs.mkdir(parent).catch(() => {
+			/** ignore */
+		});
 	}
+
+	// Get the list of unique base directories for the given files
+	const uniqueDirs = [
+		...new Set(
+			fileNames(spec)
+				.map((filename) => path.dirname(filename))
+				.filter((dirname) => dirname !== '.' && dirname !== '/')
+				.map((dirname) => dirname),
+		),
+	];
+
+	// Create all parent directories
+	await Promise.all(
+		uniqueDirs.map((dirname) =>
+			fs.mkdir(path.join(parent, dirname), { recursive: true }).catch(() => {
+				/** ignore */
+			}),
+		),
+	);
+
+	// Get file contents from references if any
+	const filesWithSpec: Array<[string, FileSpec]> = await Promise.all(
+		fileNames(spec).map(async (filename) => {
+			const file = spec[filename];
+			if (isFileContents(file) || isFileSpec(file)) {
+				return [filename, fileSpec(file)];
+			}
+
+			const { from, ...opts } = fileRef(file as FileRef);
+			return fs
+				.readFile(from)
+				.then((contents) => [filename, { contents, ...opts }]);
+		}),
+	);
 
 	// Write all files first
 	// TODO: this writes in parallel, if necessary we might want to write
 	// in batches but maybe it won't be necessary given that this is for testing
 	await Promise.all(
-		files(spec).map((file) =>
+		filesWithSpec.map(([filename, filespec]) =>
 			fs
-				.open(path.join(parent, file), 'w')
-				.then((fd) =>
-					fd.writeFile(spec[file] as File).finally(() => fd.close()),
+				.open(path.join(parent, filename), 'w')
+				.then((fd) => fd.writeFile(filespec.contents).finally(() => fd.close()))
+				.then(() =>
+					fs.utimes(
+						path.join(parent, filename),
+						filespec.atime,
+						filespec.mtime,
+					),
 				),
 		),
 	);
 
 	// Write child directories sequentially (depth-first)
-	for (const dirPath of dirs(spec)) {
-		await replace(spec[dirPath] as Directory, dirPath);
+	for (const dirPath of dirNames(spec)) {
+		await replace(spec[dirPath] as Directory, path.join(parent, dirPath));
 	}
 }

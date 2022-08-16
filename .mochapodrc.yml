@@ -19,3 +19,5 @@ buildOnly: true
 testfs:
   filesystem:
     /etc/unused.conf: 'just for testing'
+    /etc/extra.conf:
+      from: tests/data/extra.conf
