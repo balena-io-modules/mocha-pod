@@ -209,11 +209,12 @@ export function fileSpec(
  */
 export function fileRef(
 	f: string | WithOptional<FileRef, keyof FileOpts>,
+	basedir = process.cwd(),
 ): FileRef {
 	const now = new Date();
 	if (isString(f)) {
 		if (!path.isAbsolute(f)) {
-			f = path.resolve(process.cwd(), f);
+			f = path.resolve(basedir, f);
 		}
 		return { from: f, mtime: now, atime: now };
 	}

@@ -9,7 +9,17 @@ import { nanoid } from 'nanoid';
 import { createReadStream, createWriteStream, promises as fs } from 'fs';
 import { flatten, replace, fileRef, fileSpec } from './utils';
 
-import { Config, Directory, Disabled, Enabled, Opts, TestFs } from './types';
+import {
+	Config,
+	Directory,
+	Disabled,
+	Enabled,
+	Opts,
+	TestFs,
+	WithOptional,
+	FileRef,
+	FileOpts,
+} from './types';
 
 class TestFsLocked extends Error {}
 
@@ -61,6 +71,7 @@ let defaults: Config = {
 	keep: [],
 	cleanup: [],
 	rootdir: '/',
+	basedir: process.cwd(),
 };
 
 /**
@@ -198,6 +209,7 @@ export const testfs: TestFs = Object.assign(build, {
 	restore,
 	leftovers,
 	file: fileSpec,
-	from: fileRef,
+	from: (f: string | WithOptional<FileRef, keyof FileOpts>) =>
+		fileRef(f, defaults.basedir),
 });
 export default testfs;

@@ -59,6 +59,12 @@ export interface Directory {
 
 export interface Opts {
 	/**
+	 * Directory to use as base for search when calling {@link TestFs.from}
+	 * @defaultValue given by the configuration in `.mochapodrc.yml`
+	 */
+	readonly basedir: string;
+
+	/**
 	 * Directory to use as base for the directory specification and glob search.
 	 *
 	 * @defaultValue `/`

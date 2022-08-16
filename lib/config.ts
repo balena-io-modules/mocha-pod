@@ -92,11 +92,11 @@ export type Config = {
 	testCommand: string[];
 
 	/**
-	 * TestFs configuration to be used globally for all tests
+	 * TestFs configuration to be used globally for all tests.
 	 *
 	 * @defaultValue `{}`
 	 */
-	testfs: Partial<TestFs.Config>;
+	testfs: Partial<Omit<TestFs.Config, 'basedir'>>;
 
 	// Leave the type open so additional keys can be set
 	[key: string]: any;
