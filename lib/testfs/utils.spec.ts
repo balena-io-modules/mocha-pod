@@ -2,7 +2,7 @@ import { expect } from '~/testing';
 
 import { promises as fs } from 'fs';
 import * as mock from 'mock-fs';
-import { dir, flatten, replace } from './utils';
+import { dir, flatten, replace, fileRef, fileSpec } from './utils';
 
 describe('testfs/utils: unit tests', function () {
 	describe('dir', () => {
@@ -196,7 +196,7 @@ describe('testfs/utils: unit tests', function () {
 		});
 
 		it('creates parent directory if it does not exist', async () => {
-			mock({ '/etc': {} });
+			mock({ '/': {} });
 
 			await replace(
 				{
@@ -259,6 +259,108 @@ describe('testfs/utils: unit tests', function () {
 			expect(
 				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
 			).to.equal('SECOND FILE');
+
+			mock.restore();
+		});
+
+		it('uses data from file reference if given', async () => {
+			mock({
+				'/etc': {},
+				'/testdata': { 'a.conf': 'FIRST FILE', 'b.conf': 'SECOND FILE' },
+			});
+
+			await replace(
+				{
+					'/service-a': { 'a.conf': fileRef('/testdata/a.conf') },
+					'/service-b': { 'subdir/b.conf': fileRef('/testdata/b.conf') },
+				},
+				'/etc',
+			);
+
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+			expect(
+				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
+			).to.equal('SECOND FILE');
+
+			mock.restore();
+		});
+
+		it('sets atime if provided in the file spec', async () => {
+			const atime = new Date('2022-08-16T17:00:00Z');
+			mock({
+				'/etc': {},
+				'/testdata': { 'b.conf': 'SECOND FILE' },
+			});
+
+			await replace(
+				{
+					'/service-a': {
+						'a.conf': fileSpec({
+							contents: 'FIRST FILE',
+							atime,
+						}),
+					},
+					'/service-b': {
+						'subdir/b.conf': fileRef({
+							from: '/testdata/b.conf',
+							atime,
+						}),
+					},
+				},
+				'/etc',
+			);
+			const aStat = await fs.stat('/etc/service-a/a.conf');
+			expect(aStat.atime).to.deep.equal(atime);
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+
+			const bStat = await fs.stat('/etc/service-b/subdir/b.conf');
+			expect(bStat.atime).to.deep.equal(atime);
+			expect(
+				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
+			).to.equal('SECOND FILE');
+
+			mock.restore();
+		});
+
+		it('sets mtime if provided in the file spec', async () => {
+			const mtime = new Date('2022-08-16T17:00:00Z');
+			mock({
+				'/etc': {},
+				'/testdata': { 'b.conf': 'SECOND FILE' },
+			});
+
+			await replace(
+				{
+					'/service-a': {
+						'a.conf': fileSpec({
+							contents: 'FIRST FILE',
+							mtime,
+						}),
+					},
+					'/service-b': {
+						'subdir/b.conf': fileRef({
+							from: '/testdata/b.conf',
+							mtime,
+						}),
+					},
+				},
+				'/etc',
+			);
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+			const aStat = await fs.stat('/etc/service-a/a.conf');
+			expect(aStat.mtime).to.deep.equal(mtime);
+
+			expect(
+				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
+			).to.equal('SECOND FILE');
+			const bStat = await fs.stat('/etc/service-b/subdir/b.conf');
+			expect(bStat.mtime).to.deep.equal(mtime);
 
 			mock.restore();
 		});

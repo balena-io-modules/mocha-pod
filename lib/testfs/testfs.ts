@@ -7,7 +7,7 @@ import logger from '../logger';
 import { nanoid } from 'nanoid';
 
 import { createReadStream, createWriteStream, promises as fs } from 'fs';
-import { flatten, replace } from './utils';
+import { flatten, replace, fileRef, fileSpec } from './utils';
 
 import { Config, Directory, Disabled, Enabled, Opts, TestFs } from './types';
 
@@ -197,5 +197,7 @@ export const testfs: TestFs = Object.assign(build, {
 	config,
 	restore,
 	leftovers,
+	file: fileSpec,
+	from: fileRef,
 });
 export default testfs;
