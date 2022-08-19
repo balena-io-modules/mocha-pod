@@ -5,6 +5,11 @@ import logger from './logger';
 
 import * as TestFs from './testfs';
 
+import { exec as execSync } from 'child_process';
+import { promisify } from 'util';
+
+const exec = promisify(execSync);
+
 export type Config = {
 	/**
 	 * Base directory where configuration files are looked for.
@@ -62,17 +67,26 @@ export type Config = {
 
 	/**
 	 * The architecture of the system where the images will be
-	 * built and ran.
+	 * built and ran. This is used to replace `%%BALENA_ARCH%%` in
+	 * [Dockerfile.template](https://www.balena.io/docs/reference/base-images/base-images/#how-the-image-naming-scheme-works)
 	 *
-	 * @defaultValue `amd64`
+	 * The architecture is detected automatically using `uname`, set this value if building
+	 * on a device other than the local machine.
+	 *
+	 * Supported values: `'amd64' | 'aarch64' | 'armv7hf' | 'i386' | 'rpi'`
+	 *
+	 * @defaultValue inferred from `process.arch`
 	 */
-	deviceArch: 'amd64' | 'aarch64' | 'armv7hf' | 'i386' | 'rpi';
+	deviceArch: string;
 
 	/**
-	 * Device type. Used for replacing `%%BALENA_MACHINE_NAME%%` in Dockerfile.template if
+	 * The device type of the system where the images will be built an ran.
+	 * This is used to replace `%%BALENA_MACHINE_NAME%%` in
+	 * [Dockerfile.template](https://www.balena.io/docs/reference/base-images/base-images/#how-the-image-naming-scheme-works)
 	 * given.
 	 *
-	 * It is inferred from the deviceArch if none are set.
+	 * The device type is inferred automatically from the device architecture, set this value if building
+	 * on a device other than the local machine.
 	 */
 	deviceType: string;
 
@@ -105,8 +119,8 @@ export type Config = {
 /**
  * Get a representative device type from the given architecture
  */
-function inferDeviceTypeFormArch(arch: Config['deviceArch']) {
-	switch (arch) {
+function inferDeviceTypeFormArch(cpuArch: Config['deviceArch']) {
+	switch (cpuArch) {
 		case 'amd64':
 			return 'genericx86-64-ext';
 		case 'aarch64':
@@ -118,8 +132,35 @@ function inferDeviceTypeFormArch(arch: Config['deviceArch']) {
 		case 'rpi':
 			return 'raspberry-pi';
 		default:
-			// This will only happen due to user error
-			throw new Error(`Unknown architecture: ${arch}`);
+			logger.debug(
+				`Could not infer device type from architecture: '${cpuArch}'`,
+			);
+			return 'unknown';
+	}
+}
+
+async function arch() {
+	const uname = await exec('uname -m').catch((e) => {
+		throw new Error(`Failed to detect processor architecture: ${e.message}.`);
+	});
+
+	const cpuArch = uname.stdout.trim();
+	switch (cpuArch) {
+		case 'aarch64':
+		case 'amd64':
+			return 'aarch64';
+		case 'x86_64':
+			return 'amd64';
+		case 'armv7l':
+			return 'armv7hf';
+		case 'armv6l':
+			return 'rpi';
+		case 'i686':
+		case 'i386':
+			return 'i386';
+		default:
+			logger.debug(`Unknown architecture: '${cpuArch}'`);
+			return cpuArch;
 	}
 }
 
@@ -187,6 +228,17 @@ export async function Config(
 			return {} as Partial<Config>;
 		});
 
+	// Set log levels
+	logger.enable(
+		// Append value of DEBUG env var if any
+		[
+			userconf.logging ?? overrides.logging ?? DEFAULTS.logging,
+			process.env.DEBUG,
+		]
+			.filter((s) => !!s)
+			.join(','),
+	);
+
 	// Deduce the name from package.json
 	const dir = toAbsolute(overrides.basedir ?? DEFAULTS.basedir);
 	const projectName =
@@ -197,22 +249,20 @@ export async function Config(
 			.then((obj: any) => slugify(obj?.name) ?? DEFAULTS.projectName)
 			.catch(() => DEFAULTS.projectName));
 
+	const deviceArch =
+		userconf.deviceArch ?? overrides.deviceArch ?? (await arch());
+
 	// Get the merged configuration
 	const conf = {
 		...DEFAULTS,
 		projectName,
 		...userconf,
 		...overrides,
+		deviceArch,
 	};
 
 	// Infer the device type one more time if the user has changed it
 	const deviceType = inferDeviceTypeFormArch(conf.deviceArch);
-
-	// Set log levels
-	logger.enable(
-		// Append value of DEBUG env var if any
-		[conf.logging, process.env.DEBUG].filter((s) => !!s).join(','),
-	);
 
 	// Use absolute path for the basedir
 	return { ...conf, basedir: toAbsolute(conf.basedir), deviceType };

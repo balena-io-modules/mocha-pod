@@ -39,7 +39,7 @@ Last access time for the file.
 
 #### Defined in
 
-[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L21)
+[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L21)
 
 ___
 
@@ -52,7 +52,7 @@ path is given, `process.cwd()` will be used as basedir
 
 #### Defined in
 
-[testfs/types.ts:47](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L47)
+[testfs/types.ts:47](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L47)
 
 ___
 
@@ -72,4 +72,4 @@ Last modification time for the file.
 
 #### Defined in
 
-[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L28)
+[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L28)

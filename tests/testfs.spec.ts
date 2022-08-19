@@ -6,7 +6,7 @@ import { expect } from './chai';
 import { exec as execSync } from 'child_process';
 import { promisify } from 'util';
 
-export const exec = promisify(execSync);
+const exec = promisify(execSync);
 
 describe('testfs: integration tests', function () {
 	it('setup should backup any files modified by the given directory spec', async () => {

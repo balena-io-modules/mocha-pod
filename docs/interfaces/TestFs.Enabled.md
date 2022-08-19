@@ -28,7 +28,7 @@ Location of the backup file
 
 #### Defined in
 
-[testfs/types.ts:101](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L101)
+[testfs/types.ts:101](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L101)
 
 ## Methods
 
@@ -48,4 +48,4 @@ The following operations are performed during restore
 
 #### Defined in
 
-[testfs/types.ts:110](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L110)
+[testfs/types.ts:110](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L110)
