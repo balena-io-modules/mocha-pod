@@ -38,7 +38,7 @@ Last access time for the file.
 
 #### Defined in
 
-[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L21)
+[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L21)
 
 ___
 
@@ -50,7 +50,7 @@ Contents of the file
 
 #### Defined in
 
-[testfs/types.ts:35](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L35)
+[testfs/types.ts:35](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L35)
 
 ___
 
@@ -70,4 +70,4 @@ Last modification time for the file.
 
 #### Defined in
 
-[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/c330bc8/lib/testfs/types.ts#L28)
+[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L28)
