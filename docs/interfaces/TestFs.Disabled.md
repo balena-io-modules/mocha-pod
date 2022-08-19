@@ -32,4 +32,4 @@ Note that attempts to call the setup function more than once will cause an excep
 
 #### Defined in
 
-[testfs/types.ts:134](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L134)
+[testfs/types.ts:148](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L148)

@@ -38,7 +38,7 @@ given by the configuration in `.mochapodrc.yml`
 
 #### Defined in
 
-[testfs/types.ts:65](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L65)
+[testfs/types.ts:79](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L79)
 
 ___
 
@@ -60,7 +60,7 @@ Add here any temporary files created during the test that should be cleaned up.
 
 #### Defined in
 
-[testfs/types.ts:89](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L89)
+[testfs/types.ts:103](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L103)
 
 ___
 
@@ -76,7 +76,7 @@ Additional directory specification to be passed to `testfs()`
 
 #### Defined in
 
-[testfs/types.ts:119](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L119)
+[testfs/types.ts:133](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L133)
 
 ___
 
@@ -98,7 +98,7 @@ filesystem. Any files that will be modified during the test should go here
 
 #### Defined in
 
-[testfs/types.ts:80](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L80)
+[testfs/types.ts:94](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L94)
 
 ___
 
@@ -118,4 +118,4 @@ Directory to use as base for the directory specification and glob search.
 
 #### Defined in
 
-[testfs/types.ts:72](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L72)
+[testfs/types.ts:86](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L86)
