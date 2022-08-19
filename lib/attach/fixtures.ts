@@ -4,7 +4,6 @@ import * as Docker from 'dockerode';
 import { promises as fs } from 'fs';
 import * as readline from 'readline';
 import * as path from 'path';
-import { PassThrough } from 'stream';
 import * as tar from 'tar-fs';
 
 import logger from '../logger';
@@ -45,28 +44,20 @@ function extractDockerArrowMessage(outputLine: string): string | undefined {
 	}
 }
 
-// Source: https://github.com/balena-io/balena-cli/blob/f6d668684a6f5ea8102a964ca1942b242eaa7ae2/lib/utils/device/live.ts#L300-L325
-function getMultiStateImageIDs(buildLog: string): string[] {
-	const ids = [] as string[];
-	const lines = buildLog.split(/\r?\n/);
-	let lastArrowMessage: string | undefined;
-	for (const line of lines) {
-		// If this was a from line, take the last found
-		// image id and save it
-		if (
-			/step \d+(?:\/\d+)?\s*:\s*FROM/i.test(line) &&
-			lastArrowMessage != null
-		) {
-			ids.push(lastArrowMessage);
-		} else {
-			const msg = extractDockerArrowMessage(line);
-			if (msg != null) {
-				lastArrowMessage = msg;
-			}
-		}
-	}
+async function writeCache(stageIds: string[], cachePath: string) {
+	if (stageIds.length > 0) {
+		logger.info(`Caching successful stage build ids in '${cachePath}'`);
+		logger.debug('Stage ids', stageIds);
+		// Create cache dir if it doesn't exist. Ignore any errors
+		await fs.mkdir(path.dirname(cachePath), { recursive: true }).catch(() => {
+			/** ignore */
+		});
 
-	return ids;
+		// Write stage ids as cache for next build. Ignore any errors
+		await fs
+			.writeFile(cachePath, JSON.stringify(stageIds))
+			.catch((e) => logger.debug(`Could not write cache: ${e.message}`));
+	}
 }
 
 /**
@@ -120,7 +111,7 @@ export async function mochaGlobalSetup() {
 	);
 
 	// Try to load cache. Ignore errors
-	const cachePath = path.join(config.basedir, '.cache', 'mochapod-cache.json');
+	const cachePath = path.join(config.basedir, '.cache', 'mochapod.json');
 	const cache = await fs
 		.readFile(cachePath, 'utf8')
 		.then((c) => JSON.parse(c))
@@ -131,11 +122,9 @@ export async function mochaGlobalSetup() {
 
 	// Build the image ad get intermediate images from build.
 	// Necessary for multi stage caching
-	const { image, buildLog } = await new Promise((resolve) => {
-		// Prepare to store the build logs
-		const chunks = [] as Buffer[];
-		const buildLogStream = new PassThrough();
-		buildLogStream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+	const { image, stageIds } = await new Promise((resolve) => {
+		// Store the stage ids for caching
+		const ids = [] as string[];
 
 		const hooks = {
 			buildStream: (input: NodeJS.ReadWriteStream): void => {
@@ -144,17 +133,34 @@ export async function mochaGlobalSetup() {
 				// Send the tar stream to the docker daemon
 				outputStream.pipe(input);
 
-				// Pipe the output to memory
-				outputStream.pipe(buildLogStream);
+				// Parse the build output to get stage ids and
+				// for logging
+				let lastArrowMessage: string | undefined;
+				readline.createInterface({ input }).on('line', (line) => {
+					// If this was a FROM line, take the last found
+					// image id and save it as a stage id
+					// Source: https://github.com/balena-io/balena-cli/blob/f6d668684a6f5ea8102a964ca1942b242eaa7ae2/lib/utils/device/live.ts#L300-L325
+					if (
+						/step \d+(?:\/\d+)?\s*:\s*FROM/i.test(line) &&
+						lastArrowMessage != null
+					) {
+						ids.push(lastArrowMessage);
+					} else {
+						const msg = extractDockerArrowMessage(line);
+						if (msg != null) {
+							lastArrowMessage = msg;
+						}
+					}
 
-				// Pipe the build output to the logger
-				readline.createInterface({ input }).on('line', logger.info);
+					// Log the build line
+					logger.info(line);
+				});
 			},
 			buildSuccess: (imageId: string): void => {
 				logger.info(`Successful build! ImageId: ${imageId}`);
 				resolve({
 					image: imageId,
-					buildLog: Buffer.concat(chunks).toString('utf8'),
+					stageIds: ids.concat([imageId]),
 				});
 			},
 			buildFailure: (error: Error): void => {
@@ -168,37 +174,15 @@ export async function mochaGlobalSetup() {
 				// Use the project name as part of the image name
 				t: `${config.projectName}:testing`,
 				...config.dockerBuildOpts,
-				cachefrom: [
-					config.dockerBuildOpts.t ?? `${config.projectName}:testing`,
-					...(config.dockerBuildOpts.cachefrom ?? []),
-					...cache,
-				],
+				cachefrom: [...(config.dockerBuildOpts.cachefrom ?? []), ...cache],
 			},
 			hooks,
 			logger.error,
 		);
 	});
 
-	const stageIds = getMultiStateImageIDs(buildLog);
-
-	// If this is a multi stage build, skip the cache
-	if (stageIds.length > 0) {
-		// Create cache dir if it doesn't exist. Ignore any errors
-		await fs
-			.mkdir(path.dirname(cachePath), { recursive: false })
-			.catch((e) =>
-				logger.debug(
-					`Could not create cache directory ${path.dirname(cachePath)}: ${
-						e.message
-					}`,
-				),
-			);
-
-		// Write stage ids as cache for next build. Ignore any errors
-		await fs
-			.writeFile(cachePath, JSON.stringify(stageIds))
-			.catch((e) => logger.debug(`Could not write cache: ${e.message}`));
-	}
+	// Write the cache
+	writeCache(stageIds, cachePath);
 
 	// If build only is set, we assume that the tests were ran within
 	// the image build and exit successfully. In that scenarion, if the tests failed, the build
