@@ -2,10 +2,6 @@ import { testfs, MochaPod } from '~/mocha-pod';
 import { promises as fs } from 'fs';
 
 import { expect } from './chai';
-import { exec as execSync } from 'child_process';
-import { promisify } from 'util';
-
-export const exec = promisify(execSync);
 
 describe('hooks: integration tests', function () {
 	it('global testfs configuration should be used', async () => {
