@@ -182,7 +182,7 @@ export async function mochaGlobalSetup() {
 	});
 
 	// Write the cache
-	writeCache(stageIds, cachePath);
+	await writeCache(stageIds, cachePath);
 
 	// If build only is set, we assume that the tests were ran within
 	// the image build and exit successfully. In that scenarion, if the tests failed, the build
