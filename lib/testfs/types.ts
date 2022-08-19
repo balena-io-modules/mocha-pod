@@ -26,6 +26,20 @@ export interface FileOpts {
 	 * @defaultValue `new Date()`
 	 */
 	mtime: Date;
+
+	/**
+	 * User id for the file
+	 *
+	 * @defaultValue: `process.getuid()`
+	 */
+	uid: number;
+
+	/**
+	 * Group id for the file
+	 *
+	 * @defaultValue `process.getgid()`
+	 */
+	gid: number;
 }
 
 export interface FileSpec extends FileOpts {

@@ -18,7 +18,9 @@ Generic file options
 
 - [atime](TestFs.FileSpec.md#atime)
 - [contents](TestFs.FileSpec.md#contents)
+- [gid](TestFs.FileSpec.md#gid)
 - [mtime](TestFs.FileSpec.md#mtime)
+- [uid](TestFs.FileSpec.md#uid)
 
 ## Properties
 
@@ -38,7 +40,7 @@ Last access time for the file.
 
 #### Defined in
 
-[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L21)
+[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L21)
 
 ___
 
@@ -50,7 +52,27 @@ Contents of the file
 
 #### Defined in
 
-[testfs/types.ts:35](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L35)
+[testfs/types.ts:49](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L49)
+
+___
+
+### <a id="gid" name="gid"></a> gid
+
+• **gid**: `number`
+
+Group id for the file
+
+**`Default Value`**
+
+`process.getgid()`
+
+#### Inherited from
+
+[FileOpts](TestFs.FileOpts.md).[gid](TestFs.FileOpts.md#gid)
+
+#### Defined in
+
+[testfs/types.ts:42](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L42)
 
 ___
 
@@ -70,4 +92,22 @@ Last modification time for the file.
 
 #### Defined in
 
-[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L28)
+[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L28)
+
+___
+
+### <a id="uid" name="uid"></a> uid
+
+• **uid**: `number`
+
+User id for the file
+
+@defaultValue: `process.getuid()`
+
+#### Inherited from
+
+[FileOpts](TestFs.FileOpts.md).[uid](TestFs.FileOpts.md#uid)
+
+#### Defined in
+
+[testfs/types.ts:35](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L35)

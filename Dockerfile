@@ -1,4 +1,4 @@
-FROM node:alpine as build
+FROM node:16-alpine as build
 
 WORKDIR /usr/src/app
 
@@ -29,4 +29,9 @@ FROM build as testing
 # container instead of during the image build step.
 # Make sure you also have set the  `buildOnly` to `false` inside
 # .mochapodrc.yml
-RUN MOCHAPOD_SKIP_SETUP=1 npm run test
+RUN MOCHAPOD_SKIP_SETUP=1 npm run test:integration
+
+# Test everything else for the CI tests
+FROM testing as ci
+
+RUN npm run test:unit && npm run build && npm run lint

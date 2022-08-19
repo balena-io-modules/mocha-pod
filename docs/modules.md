@@ -42,4 +42,4 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:154](https://github.com/balena-io-modules/mocha-pod/blob/f3a69be/lib/testfs/types.ts#L154)
+[testfs/types.ts:168](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L168)

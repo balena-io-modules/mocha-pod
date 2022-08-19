@@ -197,11 +197,16 @@ export function fileSpec(
 	f: string | Buffer | WithOptional<FileSpec, keyof FileOpts>,
 ): FileSpec {
 	const now = new Date();
+
+	// getuid and getgid are not available on Windows, this
+	// prevents the typescript compiler from complaining
+	const uid = (process.getuid ?? (() => 0))();
+	const gid = (process.getgid ?? (() => 0))();
 	if (isFileContents(f)) {
-		return { contents: f, atime: now, mtime: now };
+		return { contents: f, atime: now, mtime: now, uid, gid };
 	}
 
-	return { mtime: now, atime: now, ...f };
+	return { mtime: now, atime: now, uid, gid, ...f };
 }
 
 /**
@@ -212,14 +217,19 @@ export function fileRef(
 	basedir = process.cwd(),
 ): FileRef {
 	const now = new Date();
+
+	// getuid and getgid are not available on Windows, this
+	// prevents the typescript compiler from complaining
+	const uid = (process.getuid ?? (() => 0))();
+	const gid = (process.getgid ?? (() => 0))();
 	if (isString(f)) {
 		if (!path.isAbsolute(f)) {
 			f = path.resolve(basedir, f);
 		}
-		return { from: f, mtime: now, atime: now };
+		return { from: f, mtime: now, atime: now, uid, gid };
 	}
 
-	return { mtime: now, atime: now, ...f };
+	return { mtime: now, atime: now, uid, gid, ...f };
 }
 
 /**
@@ -339,6 +349,9 @@ export async function replace(spec: Directory, parent = '/') {
 			fs
 				.open(path.join(parent, filename), 'w')
 				.then((fd) => fd.writeFile(filespec.contents).finally(() => fd.close()))
+				.then(() =>
+					fs.chown(path.join(parent, filename), filespec.uid, filespec.gid),
+				)
 				.then(() =>
 					fs.utimes(
 						path.join(parent, filename),
