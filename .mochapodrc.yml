@@ -14,6 +14,10 @@ dockerHost: unix:///var/run/docker.sock
 # Defaults to `false`
 buildOnly: true
 
+# Additional options to pass to the image build
+dockerBuildOpts:
+  target: 'testing' # this is the stage that runs integration tests
+
 # This defines default configuration that
 # should apply to all testfs instances
 testfs:
