@@ -364,5 +364,83 @@ describe('testfs/utils: unit tests', function () {
 
 			mock.restore();
 		});
+
+		it('sets uid if provided in the file spec', async () => {
+			const uid = 65534;
+			mock({
+				'/etc': {},
+				'/testdata': { 'b.conf': 'SECOND FILE' },
+			});
+
+			await replace(
+				{
+					'/service-a': {
+						'a.conf': fileSpec({
+							contents: 'FIRST FILE',
+							uid,
+						}),
+					},
+					'/service-b': {
+						'subdir/b.conf': fileRef({
+							from: '/testdata/b.conf',
+							uid,
+						}),
+					},
+				},
+				'/etc',
+			);
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+			const aStat = await fs.stat('/etc/service-a/a.conf');
+			expect(aStat.uid).to.deep.equal(uid);
+
+			expect(
+				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
+			).to.equal('SECOND FILE');
+			const bStat = await fs.stat('/etc/service-b/subdir/b.conf');
+			expect(bStat.uid).to.deep.equal(uid);
+
+			mock.restore();
+		});
+
+		it('sets gid if provided in the file spec', async () => {
+			const gid = 65534;
+			mock({
+				'/etc': {},
+				'/testdata': { 'b.conf': 'SECOND FILE' },
+			});
+
+			await replace(
+				{
+					'/service-a': {
+						'a.conf': fileSpec({
+							contents: 'FIRST FILE',
+							gid,
+						}),
+					},
+					'/service-b': {
+						'subdir/b.conf': fileRef({
+							from: '/testdata/b.conf',
+							gid,
+						}),
+					},
+				},
+				'/etc',
+			);
+			expect(await fs.readFile('/etc/service-a/a.conf', 'utf8')).to.equal(
+				'FIRST FILE',
+			);
+			const aStat = await fs.stat('/etc/service-a/a.conf');
+			expect(aStat.gid).to.deep.equal(gid);
+
+			expect(
+				await fs.readFile('/etc/service-b/subdir/b.conf', 'utf8'),
+			).to.equal('SECOND FILE');
+			const bStat = await fs.stat('/etc/service-b/subdir/b.conf');
+			expect(bStat.gid).to.deep.equal(gid);
+
+			mock.restore();
+		});
 	});
 });

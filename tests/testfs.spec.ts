@@ -328,4 +328,60 @@ describe('testfs: integration tests', function () {
 			'file should not exist after the test',
 		).to.be.rejected;
 	});
+
+	it('setup should allow to configure file uid through the directory spec', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const uid = 65534;
+		const tmp = await testfs({
+			// Create a file with a set atime
+			'/etc/other.conf': testfs.file({ contents: 'loglevel=debug', uid }),
+		}).enable();
+
+		// The file should be available after setup and have the proper time
+		const fStat = await fs.stat('/etc/other.conf');
+		expect(fStat.uid).to.deep.equal(uid);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+	});
+
+	it('setup should allow to configure file uid through the directory spec', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const gid = 65534;
+		const tmp = await testfs({
+			// Create a file with a set atime
+			'/etc/other.conf': testfs.file({ contents: 'loglevel=debug', gid }),
+		}).enable();
+
+		// The file should be available after setup and have the proper time
+		const fStat = await fs.stat('/etc/other.conf');
+		expect(fStat.gid).to.deep.equal(gid);
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should have been removed
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+	});
 });
