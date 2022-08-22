@@ -37,7 +37,7 @@ Last access time for the file.
 
 #### Defined in
 
-[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L21)
+[testfs/types.ts:21](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L21)
 
 ___
 
@@ -53,7 +53,7 @@ Group id for the file
 
 #### Defined in
 
-[testfs/types.ts:42](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L42)
+[testfs/types.ts:42](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L42)
 
 ___
 
@@ -69,7 +69,7 @@ Last modification time for the file.
 
 #### Defined in
 
-[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L28)
+[testfs/types.ts:28](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L28)
 
 ___
 
@@ -83,4 +83,4 @@ User id for the file
 
 #### Defined in
 
-[testfs/types.ts:35](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L35)
+[testfs/types.ts:35](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L35)

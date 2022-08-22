@@ -33,7 +33,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:168](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L168)
+[testfs/types.ts:168](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L168)
 
 ## Table of contents
 
@@ -63,7 +63,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:175](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L175)
+[testfs/types.ts:175](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L175)
 
 ___
 
@@ -77,7 +77,7 @@ Create a file specification from a partial file description
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `f` | `string` \| `Buffer` \| [`WithOptional`](../modules/TestFs.md#withoptional)<[`FileSpec`](TestFs.FileSpec.md), keyof [`FileOpts`](TestFs.FileOpts.md)\> | file contents or partial file specification |
+| `f` | `string` \| `Buffer` \| `Partial`<[`FileSpec`](TestFs.FileSpec.md)\> | file contents or partial file specification |
 
 #### Returns
 
@@ -87,7 +87,7 @@ full file specification with defaults set
 
 #### Defined in
 
-[testfs/types.ts:200](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L200)
+[testfs/types.ts:200](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L200)
 
 ___
 
@@ -111,7 +111,7 @@ full file reference specification with defaults set
 
 #### Defined in
 
-[testfs/types.ts:209](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L209)
+[testfs/types.ts:209](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L209)
 
 ___
 
@@ -131,7 +131,7 @@ safe to run the setup.
 
 #### Defined in
 
-[testfs/types.ts:192](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L192)
+[testfs/types.ts:192](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L192)
 
 ___
 
@@ -150,4 +150,4 @@ This function looks for a currently enabled instance of a test filesystem and ca
 
 #### Defined in
 
-[testfs/types.ts:183](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/testfs/types.ts#L183)
+[testfs/types.ts:183](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L183)

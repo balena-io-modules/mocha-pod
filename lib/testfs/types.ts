@@ -197,7 +197,7 @@ export interface TestFs {
 	 * @param f - file contents or partial file specification
 	 * @return full file specification with defaults set
 	 */
-	file(f: string | Buffer | WithOptional<FileSpec, keyof FileOpts>): FileSpec;
+	file(f: string | Buffer | Partial<FileSpec>): FileSpec;
 
 	/**
 	 * Create a file reference to an existing file

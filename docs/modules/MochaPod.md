@@ -50,9 +50,9 @@ Renames and re-exports [Config](MochaPod.md#config)
 
 #### Defined in
 
-[config.ts:215](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/config.ts#L215)
+[config.ts:215](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/config.ts#L215)
 
-[config.ts:13](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/config.ts#L13)
+[config.ts:13](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/config.ts#L13)
 
 ## Functions
 
@@ -82,4 +82,4 @@ overrides the default values
 
 #### Defined in
 
-[config.ts:215](https://github.com/balena-io-modules/mocha-pod/blob/01a67c2/lib/config.ts#L215)
+[config.ts:215](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/config.ts#L215)

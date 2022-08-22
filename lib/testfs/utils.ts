@@ -193,9 +193,7 @@ export function fileNames(root: Directory): string[] {
 /**
  * Create a file specification from a partial spec
  */
-export function fileSpec(
-	f: string | Buffer | WithOptional<FileSpec, keyof FileOpts>,
-): FileSpec {
+export function fileSpec(f: string | Buffer | Partial<FileSpec>): FileSpec {
 	const now = new Date();
 
 	// getuid and getgid are not available on Windows, this
@@ -206,7 +204,7 @@ export function fileSpec(
 		return { contents: f, atime: now, mtime: now, uid, gid };
 	}
 
-	return { mtime: now, atime: now, uid, gid, ...f };
+	return { contents: '', mtime: now, atime: now, uid, gid, ...f };
 }
 
 /**
