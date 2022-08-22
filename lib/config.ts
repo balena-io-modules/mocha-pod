@@ -43,6 +43,9 @@ export type Config = {
 	 * - `tcp://192.168.1.105`
 	 * - `unix:///var/run/docker.sock`
 	 *
+	 * The configuration value can be overriden by setting the `DOCKER_HOST` environment
+	 * variable.
+	 *
 	 * @defaultValue `unix:///var/run/docker.sock`
 	 */
 	dockerHost: string;
@@ -264,8 +267,11 @@ export async function Config(
 	// Infer the device type one more time if the user has changed it
 	const deviceType = inferDeviceTypeFormArch(conf.deviceArch);
 
+	// Allow overriding the configured docker host using an env var
+	const dockerHost = process.env.DOCKER_HOST ?? conf.dockerHost;
+
 	// Use absolute path for the basedir
-	return { ...conf, basedir: toAbsolute(conf.basedir), deviceType };
+	return { ...conf, basedir: toAbsolute(conf.basedir), deviceType, dockerHost };
 }
 
 export default Config;
