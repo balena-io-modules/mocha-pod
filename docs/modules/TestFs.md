@@ -40,7 +40,7 @@ Re-exports [testfs](../modules.md#testfs)
 
 #### Defined in
 
-[testfs/types.ts:64](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L64)
+[testfs/types.ts:64](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L64)
 
 ___
 
@@ -52,7 +52,7 @@ Describe a file contents
 
 #### Defined in
 
-[testfs/types.ts:10](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L10)
+[testfs/types.ts:10](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L10)
 
 ___
 
@@ -71,4 +71,4 @@ Utility type to mark only some properties of a given type as optional
 
 #### Defined in
 
-[testfs/types.ts:4](https://github.com/balena-io-modules/mocha-pod/blob/44a2ef1/lib/testfs/types.ts#L4)
+[testfs/types.ts:4](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L4)
