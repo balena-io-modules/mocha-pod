@@ -23,15 +23,4 @@ COPY .mochapodrc.yml ./
 # this image for development of mocha-pod
 ENV MOCHAPOD_SKIP_SETUP=1
 
-FROM build as testing
-
-# Comment the next line if you want to run the tests as a separate
-# container instead of during the image build step.
-# Make sure you also have set the  `buildOnly` to `false` inside
-# .mochapodrc.yml
-RUN MOCHAPOD_SKIP_SETUP=1 npm run test:integration
-
-# Test everything else for the CI tests
-FROM testing as ci
-
-RUN npm run test:unit && npm run build && npm run lint
+CMD npm run test:integration

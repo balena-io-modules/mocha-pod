@@ -8,15 +8,8 @@
 #
 dockerHost: unix:///var/run/docker.sock
 
-# Only perform the build step during the global mocha setup. If set to false
-# this will run `npm run test` inside a container after the build.
-#
-# Defaults to `false`
-buildOnly: true
-
-# Additional options to pass to the image build
-dockerBuildOpts:
-  target: 'testing' # this is the stage that runs integration tests
+# Default to the command defined in the Dockerfile
+testCommand: []
 
 # This defines default configuration that
 # should apply to all testfs instances

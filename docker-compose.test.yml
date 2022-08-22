@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  docker:
+    image: docker:dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ''
+    command: --tls=false --debug
+
+  sut:
+    image: node:16-alpine
+    command: npm run install && npm run test
+    depends_on:
+      - docker
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+    volumes:
+      - ./package.json:/src/package.json:ro
+      - ./tslint.json:/src/tslint.json:ro
+      - ./tsconfig.json:/src/tsconfig.json:ro
+      - ./tsconfig.release.json:/src/tsconfig.release.json:ro
+      - ./.mochapodrc.yml:/src/.mochapodrc.yml:ro
+      - ./lib:/src/lib:ro
+      - ./tests:/src/tests:ro
+      - ./Dockerfile:./src/Dockerfile:ro
+    working_dir: /src
