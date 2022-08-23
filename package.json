@@ -1,87 +1,88 @@
 {
-  "name": "mocha-pod",
-  "version": "0.5.0",
-  "description": "Mocha + Docker. Run integration tests in a docker container",
-  "homepage": "https://github.com/balena-io-modules/mocha-pod#readme",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
-  "exports": {
-    ".": "./build/index.js",
-    "./attach": "./build/attach/index.js"
-  },
-  "keywords": [
-    "balena",
-    "typescript",
-    "mocha",
-    "testing",
-    "integration"
-  ],
-  "author": "Balena Inc. <hello@balena.io>",
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/balena-io-modules/mocha-pod.git"
-  },
-  "bugs": {
-    "url": "https://github.com/balena-io-modules/mocha-pod/issues"
-  },
-  "files": [
-    "build/",
-    "CHANGELOG.md",
-    "README.md"
-  ],
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "scripts": {
-    "clean": "rimraf build",
-    "typedoc": "rimraf docs && typedoc",
-    "build": "npm run clean && tsc --project tsconfig.release.json",
-    "lint": "balena-lint --typescript lib tests",
-    "lint-fix": "balena-lint --typescript --fix lib tests",
-    "test:unit": "mocha -r ts-node/register -r tsconfig-paths/register --reporter spec lib/**/*.spec.ts",
-    "test:integration": "mocha -r ts-node/register -r tsconfig-paths/register -r lib/attach  --reporter spec tests/**/*.spec.ts",
-    "test:node": "npm run test:unit && npm run test:integration",
-    "test": "npm run build && npm run lint && npm run test:node",
-    "test:fast": "npm run build && npm run test:node",
-    "prepack": "npm run build"
-  },
-  "devDependencies": {
-    "@balena/lint": "^5.4.2",
-    "@types/chai": "^4.2.18",
-    "@types/chai-as-promised": "^7.1.4",
-    "@types/debug": "^4.1.7",
-    "@types/dockerode": "^3.3.9",
-    "@types/js-yaml": "^4.0.5",
-    "@types/mocha": "^9.1.1",
-    "@types/mock-fs": "^4.13.1",
-    "@types/tar-fs": "^2.0.1",
-    "@types/tar-stream": "^2.2.2",
-    "balena-config-karma": "^3.0.0",
-    "chai": "^4.3.4",
-    "chai-as-promised": "^7.1.1",
-    "husky": "^4.2.5",
-    "lint-staged": "^11.0.0",
-    "mocha": "^10.0.0",
-    "mock-fs": "^5.1.4",
-    "rimraf": "^3.0.2",
-    "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.0.0",
-    "typedoc": "^0.23.10",
-    "typedoc-plugin-markdown": "^3.13.4",
-    "typescript": "^4.7.4"
-  },
-  "dependencies": {
-    "@balena/compose": "^2.1.0",
-    "@balena/dockerignore": "^1.0.2",
-    "debug": "^4.3.4",
-    "dockerode": "^3.3.2",
-    "fast-glob": "^3.2.11",
-    "js-yaml": "^4.1.0",
-    "nanoid": "^3.3.4",
-    "tar-fs": "^2.1.1"
-  },
-  "versionist": {
-    "publishedAt": "2022-08-22T20:36:14.564Z"
-  }
+	"name": "mocha-pod",
+	"version": "0.5.0",
+	"description": "Mocha + Docker. Run integration tests in a docker container",
+	"homepage": "https://github.com/balena-io-modules/mocha-pod#readme",
+	"main": "build/index.js",
+	"types": "build/index.d.ts",
+	"exports": {
+		".": "./build/index.js",
+		"./attach": "./build/attach/index.js",
+		"./skip-setup": "./build/attach/hooks.js"
+	},
+	"keywords": [
+		"balena",
+		"typescript",
+		"mocha",
+		"testing",
+		"integration"
+	],
+	"author": "Balena Inc. <hello@balena.io>",
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/balena-io-modules/mocha-pod.git"
+	},
+	"bugs": {
+		"url": "https://github.com/balena-io-modules/mocha-pod/issues"
+	},
+	"files": [
+		"build/",
+		"CHANGELOG.md",
+		"README.md"
+	],
+	"engines": {
+		"node": ">=12.0.0"
+	},
+	"scripts": {
+		"clean": "rimraf build",
+		"typedoc": "rimraf docs && typedoc",
+		"build": "npm run clean && tsc --project tsconfig.release.json",
+		"lint": "balena-lint --typescript lib tests",
+		"lint-fix": "balena-lint --typescript --fix lib tests",
+		"test:unit": "mocha -r ts-node/register -r tsconfig-paths/register --reporter spec lib/**/*.spec.ts",
+		"test:integration": "mocha -r ts-node/register -r tsconfig-paths/register -r lib/attach  --reporter spec tests/**/*.spec.ts",
+		"test:node": "npm run test:unit && npm run test:integration",
+		"test": "npm run build && npm run lint && npm run test:node",
+		"test:fast": "npm run build && npm run test:node",
+		"prepack": "npm run build"
+	},
+	"devDependencies": {
+		"@balena/lint": "^5.4.2",
+		"@types/chai": "^4.2.18",
+		"@types/chai-as-promised": "^7.1.4",
+		"@types/debug": "^4.1.7",
+		"@types/dockerode": "^3.3.9",
+		"@types/js-yaml": "^4.0.5",
+		"@types/mocha": "^9.1.1",
+		"@types/mock-fs": "^4.13.1",
+		"@types/tar-fs": "^2.0.1",
+		"@types/tar-stream": "^2.2.2",
+		"balena-config-karma": "^3.0.0",
+		"chai": "^4.3.4",
+		"chai-as-promised": "^7.1.1",
+		"husky": "^4.2.5",
+		"lint-staged": "^11.0.0",
+		"mocha": "^10.0.0",
+		"mock-fs": "^5.1.4",
+		"rimraf": "^3.0.2",
+		"ts-node": "^10.9.1",
+		"tsconfig-paths": "^4.0.0",
+		"typedoc": "^0.23.10",
+		"typedoc-plugin-markdown": "^3.13.4",
+		"typescript": "^4.7.4"
+	},
+	"dependencies": {
+		"@balena/compose": "^2.1.0",
+		"@balena/dockerignore": "^1.0.2",
+		"debug": "^4.3.4",
+		"dockerode": "^3.3.2",
+		"fast-glob": "^3.2.11",
+		"js-yaml": "^4.1.0",
+		"nanoid": "^3.3.4",
+		"tar-fs": "^2.1.1"
+	},
+	"versionist": {
+		"publishedAt": "2022-08-22T20:36:14.564Z"
+	}
 }

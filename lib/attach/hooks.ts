@@ -31,7 +31,7 @@ export const mochaHooks = {
 			// are any doubts about this being a containerized enviroment
 			.catch(() => {
 				throw new HooksFailure(
-					'It seems that you are in a containerized environment. Exiting to avoid damage.',
+					'It seems that integration tests are not being run in a containerized environment. Exiting to avoid damage.',
 				);
 			});
 
