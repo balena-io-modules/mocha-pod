@@ -110,6 +110,11 @@ export interface Opts {
  */
 export interface Enabled {
 	/**
+	 * Id of the testfs instance
+	 */
+	readonly id: string;
+
+	/**
 	 * Location of the backup file
 	 */
 	readonly backup: string;

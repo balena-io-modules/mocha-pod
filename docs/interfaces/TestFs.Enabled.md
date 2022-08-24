@@ -13,6 +13,7 @@ When in this state, the only possible action is to
 ### Properties
 
 - [backup](TestFs.Enabled.md#backup)
+- [id](TestFs.Enabled.md#id)
 
 ### Methods
 
@@ -28,7 +29,19 @@ Location of the backup file
 
 #### Defined in
 
-[testfs/types.ts:115](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L115)
+[testfs/types.ts:120](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L120)
+
+___
+
+### <a id="id" name="id"></a> id
+
+• `Readonly` **id**: `string`
+
+Id of the testfs instance
+
+#### Defined in
+
+[testfs/types.ts:115](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L115)
 
 ## Methods
 
@@ -48,4 +61,4 @@ The following operations are performed during restore
 
 #### Defined in
 
-[testfs/types.ts:124](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L124)
+[testfs/types.ts:129](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L129)

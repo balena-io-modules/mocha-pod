@@ -33,7 +33,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:168](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L168)
+[testfs/types.ts:173](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L173)
 
 ## Table of contents
 
@@ -63,7 +63,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:175](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L175)
+[testfs/types.ts:180](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L180)
 
 ___
 
@@ -87,7 +87,7 @@ full file specification with defaults set
 
 #### Defined in
 
-[testfs/types.ts:200](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L200)
+[testfs/types.ts:205](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L205)
 
 ___
 
@@ -111,7 +111,7 @@ full file reference specification with defaults set
 
 #### Defined in
 
-[testfs/types.ts:209](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L209)
+[testfs/types.ts:214](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L214)
 
 ___
 
@@ -131,7 +131,7 @@ safe to run the setup.
 
 #### Defined in
 
-[testfs/types.ts:192](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L192)
+[testfs/types.ts:197](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L197)
 
 ___
 
@@ -150,4 +150,4 @@ This function looks for a currently enabled instance of a test filesystem and ca
 
 #### Defined in
 
-[testfs/types.ts:183](https://github.com/balena-io-modules/mocha-pod/blob/511c926/lib/testfs/types.ts#L183)
+[testfs/types.ts:188](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L188)
