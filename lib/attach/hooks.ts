@@ -49,7 +49,18 @@ export const mochaHooks = {
 
 		// Read config and set testfs default configuration
 		const config = await Config();
-		testfs.config({ basedir: config.basedir, ...config.testfs });
+
+		const { filesystem, keep, cleanup, ...extra } = {
+			basedir: config.basedir,
+			...config.testfs,
+		};
+
+		// Setup a global instance before all tests
+		await testfs(filesystem, { keep, cleanup, ...extra }).enable();
+
+		// Use extra configurations in all tests
+		testfs.config(extra);
+
 		logger.debug('Using Config', JSON.stringify(config, null, 2));
 	},
 

@@ -109,7 +109,7 @@ export type Config = {
 	testCommand: string[];
 
 	/**
-	 * TestFs configuration to be used globally for all tests.
+	 * TestFs configuration to be set by the `beforeAll` mocha-pod hook.
 	 *
 	 * @defaultValue `{}`
 	 */
