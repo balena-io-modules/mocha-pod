@@ -141,7 +141,7 @@ On restore, the module will
 - delete any files in the cleanup list
 - restore the original filesystem files from the backup
 
-Note that attempts to call `enable()` more than once will cause an exception.
+Note that if setting multiple `testfs` instances, the instances need to be restored in the reverse order that they were set. This is enforced by the testfs module and it will cause an exception otherwise.
 
 **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
 in an inconsistent state if a crash happens before a `restore()` can be performed.

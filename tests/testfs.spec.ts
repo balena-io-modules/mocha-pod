@@ -103,7 +103,7 @@ describe('testfs: integration tests', function () {
 		).to.be.rejected;
 	});
 
-	it('only one tmpfs instance can be running globally', async () => {
+	it('allows multiple instances to be set', async () => {
 		// The file should not exist before the test
 		await expect(
 			fs.access('/etc/other.conf'),
@@ -111,7 +111,52 @@ describe('testfs: integration tests', function () {
 		).to.be.rejected;
 
 		// Prepare a new test fs
-		await testfs({
+		const first = await testfs({
+			// This file doesn't exist before the test
+			'/etc/other.conf': 'debug=1',
+		}).enable();
+
+		// The file should be available after setup
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
+		await expect(fs.access('/usr/etc/other.conf')).to.be.rejected;
+
+		// Setting up a new testfs instance is allowed
+		const second = await testfs({
+			'/etc/other.conf': 'debug=0',
+			'/usr/etc/other.conf': 'logging=true',
+		}).enable();
+
+		// The file now has the new value
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=0');
+
+		// And also the new file
+		expect(await fs.readFile('/usr/etc/other.conf', 'utf-8')).to.equal(
+			'logging=true',
+		);
+
+		// Instances can be restored in the reverse order
+		await expect(second.restore()).to.not.be.rejected;
+
+		// The file should have the same value as before the second instance was set
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
+
+		// Restore the first instance
+		await expect(first.restore()).to.not.be.rejected;
+
+		// The system now has the same state as before the test
+		await expect(fs.access('/etc/other.conf')).to.be.rejected;
+		await expect(fs.access('/usr/etc/other.conf')).to.be.rejected;
+	});
+
+	it('rejects instances being restored in the wrong order', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const tmp = await testfs({
 			// This file doesn't exist before the test
 			'/etc/other.conf': 'debug=1',
 		}).enable();
@@ -119,21 +164,26 @@ describe('testfs: integration tests', function () {
 		// The file should be available after setup
 		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
 
-		await expect(
-			testfs({ '/usr/etc/other.conf': 'debug=1' }).enable(),
-			'second call to setup() should fail',
-		).to.be.rejected;
+		// Setting up a new testfs instance is allowed
+		await testfs({
+			'/etc/other.conf': 'debug=0',
+			'/usr/etc/other.conf': 'logging=true',
+		}).enable();
 
-		await expect(
-			fs.access('/usr/etc/other.conf'),
-			'file should not be created if setup fails',
-		).to.be.rejected;
+		// The file now has the new value
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=0');
+
+		// And also the new file
+		expect(await fs.readFile('/usr/etc/other.conf', 'utf-8')).to.equal(
+			'logging=true',
+		);
+
+		// Restoring the first testfs instance should fail
+		await expect(tmp.restore()).to.be.rejected;
 
 		// The file system should be restored to the original state by the exception
-		await expect(
-			fs.access('/etc/other.conf'),
-			'system should be restored by a setup failure',
-		).to.be.rejected;
+		await expect(fs.access('/etc/other.conf')).to.be.rejected;
+		await expect(fs.access('/usr/etc/other.conf')).to.be.rejected;
 	});
 
 	it('setup should allow to reference files through the directory spec', async () => {
