@@ -54,10 +54,7 @@ const lock = (() => {
 	// use betterlock for synchronization
 	const l = new BetterLock({
 		name: 'testfs', // To be used in error reporting and logging
-		log: logger.debug, // Give it your logger with appropeiate level
-		wait_timeout: 1000 * 30, // Max 30 sec wait in queue
 		execution_timeout: 1000 * 60 * 5, // Time out after 5 minutes
-		queue_size: 1,
 	});
 
 	// Stack of currently locked instances.
@@ -72,18 +69,18 @@ const lock = (() => {
 		}
 	};
 	return {
-		async acquire(tEnable: Disabled['enable']) {
+		async acquire(enableFn: Disabled['enable']) {
 			// Only allow one enable funciton to be ran at once
-			const instance = await l.acquire(tEnable);
+			const instance = await l.acquire(enableFn);
 
-			// Add the instance to the queue. Instances can
+			// Add the instance to the stack. Instances can
 			// only be restored in the order that they were taken
 			// to prevent leaving the filesystem in a weird state
 			stack.push(instance);
 
 			return instance;
 		},
-		async release(id: string, tRestore: Enabled['restore']) {
+		async release(id: Enabled['id'], restoreFn: Enabled['restore']) {
 			assert(stack.length > 0); // this should never happen
 
 			// Peek the top of the stack
@@ -93,12 +90,12 @@ const lock = (() => {
 				await releaseAll();
 
 				throw new TestFsLockError(
-					`Tried to restore instance '${id}', while last locked instance was '${last.id}'. Trying to restore files in the wrong order might leave the system in an inconsistent state.`,
+					`Tried to restore testfs instance with '${id}', but last enabled instance was '${last.id}'. Restoring files in the wrong order may leave the system in an inconsistent state.`,
 				);
 			}
 
 			// Only once restore call can be running at the same time
-			const res = await l.acquire(tRestore);
+			const res = await l.acquire(restoreFn);
 
 			// Pop the top element from the stack
 			stack.pop();
@@ -180,11 +177,48 @@ function build(
 					stream.on('finish', () => resolve(filename));
 				});
 
+				// Create the restore function to be used in case of any errors
+				const doRestore = async () => {
+					// Get the files using the cleanup glob
+					const toCleanup = await fg(cleanupGlobs, { cwd: rootdir });
+					for (const chunk of toChunks(toCleanup, 50)) {
+						// Delete files in chunks of 50 ignoring failures
+						await Promise.all(
+							chunk.map((file) => fs.unlink(file).catch(() => void 0)),
+						);
+					}
+
+					// Now restore the files from the backup
+					logger.debug('Restoring files', toKeep);
+
+					await new Promise((resolve) =>
+						createReadStream(tarFile)
+							.pipe(tar.extract(rootdir))
+							.on('finish', resolve),
+					);
+
+					// Remove the backup file
+					await fs.unlink(tarFile).catch(() => void 0);
+
+					// Return a new instance from the original option list
+					return build(spec, { keep, cleanup });
+				};
+
+				// Now that the files are backed up in memory we can replace
+				// the originals
+				await replace(toUpdate).catch((e) =>
+					// If replace fails, we try to restore immediately, although
+					// it is unlikely to succeed, then throw the original exception
+					doRestore().then(() => {
+						throw e;
+					}),
+				);
+
 				// Only allow a single restore per instance
 				let isRestored = false;
 
 				// Return the restored
-				const fsReady = {
+				return {
 					id,
 					backup: tarFile,
 					async restore() {
@@ -192,43 +226,15 @@ function build(
 							return build(spec, { keep, cleanup });
 						}
 
-						return lock.release(id, async () => {
-							// Cleanup the files form the cleanup glob
-							const toCleanup = await fg(cleanupGlobs, { cwd: rootdir });
-							for (const chunk of toChunks(toCleanup, 50)) {
-								// Delete files in chunks of 50 ignoring failures
-								await Promise.all(
-									chunk.map((file) => fs.unlink(file).catch(() => void 0)),
-								);
-							}
+						const disabled = await lock.release(id, doRestore);
 
-							// Now restore the files from the backup
-							logger.debug('Restoring files', toKeep);
+						// Mark the system as restored to prevent this function from
+						// doing any damage
+						isRestored = true;
 
-							await new Promise((resolve) =>
-								createReadStream(tarFile)
-									.pipe(tar.extract(rootdir))
-									.on('finish', resolve),
-							);
-
-							// Mark the system as restored to prevent this function from
-							// doing any damage
-							isRestored = true;
-
-							// Remove the backup file
-							await fs.unlink(tarFile).catch(() => void 0);
-
-							// Return a new instance from the original option list
-							return build(spec, { keep, cleanup });
-						});
+						return disabled;
 					},
 				};
-
-				// Now that the files are backed up in memory we can replace
-				// the originals with the replacements
-				await replace(toUpdate);
-
-				return fsReady;
 			});
 		},
 	};
