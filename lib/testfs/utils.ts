@@ -297,7 +297,10 @@ export function flatten(root: Directory): Directory {
 /**
  * Recursively write a directory spec to disk
  */
-export async function replace(spec: Directory, parent = '/') {
+export async function replace(
+	spec: Directory,
+	parent = '/',
+): Promise<string[]> {
 	// Create the parent if it doesn't exist
 	if (parent !== '/') {
 		await fs.mkdir(parent).catch(() => {
@@ -342,26 +345,32 @@ export async function replace(spec: Directory, parent = '/') {
 	// Write all files first
 	// TODO: this writes in parallel, if necessary we might want to write
 	// in batches but maybe it won't be necessary given that this is for testing
-	await Promise.all(
-		filesWithSpec.map(([filename, filespec]) =>
-			fs
-				.open(path.join(parent, filename), 'w')
-				.then((fd) => fd.writeFile(filespec.contents).finally(() => fd.close()))
-				.then(() =>
-					fs.chown(path.join(parent, filename), filespec.uid, filespec.gid),
-				)
-				.then(() =>
-					fs.utimes(
-						path.join(parent, filename),
-						filespec.atime,
-						filespec.mtime,
-					),
-				),
-		),
+	const modified = await Promise.all(
+		filesWithSpec
+			.map(
+				([filename, filespec]) =>
+					[path.join(parent, filename), filespec] as [string, FileSpec],
+			)
+			.map(([filepath, filespec]) =>
+				fs
+					.open(filepath, 'w')
+					.then((fd) =>
+						fd.writeFile(filespec.contents).finally(() => fd.close()),
+					)
+					.then(() => fs.chown(filepath, filespec.uid, filespec.gid))
+					.then(() => fs.utimes(filepath, filespec.atime, filespec.mtime))
+					.then(() => filepath),
+			),
 	);
 
 	// Write child directories sequentially (depth-first)
-	for (const dirPath of dirNames(spec)) {
-		await replace(spec[dirPath] as Directory, path.join(parent, dirPath));
-	}
+	return dirNames(spec).reduce(
+		(promise, dirPath) =>
+			promise.then((accum) =>
+				replace(spec[dirPath] as Directory, path.join(parent, dirPath)).then(
+					(list) => accum.concat(list),
+				),
+			),
+		Promise.resolve(modified),
+	);
 }
