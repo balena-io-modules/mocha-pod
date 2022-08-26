@@ -31,6 +31,8 @@ function toChunks<T = any>(array: T[], chunkSize: number) {
 	);
 }
 
+const debug = logger.info.extend('testfs');
+
 /**
  * Global tmpfs locking behavior. Only one call to `enable` or `restore` can be ran
  * at once, to prevent the filesystem to be left in an inconsistent state.
@@ -164,7 +166,7 @@ function build(
 
 				const toKeep = await fg(keepGlobs, { cwd: rootdir });
 
-				logger.debug('Backing up files', toKeep);
+				debug('enable: backing up files', toKeep);
 				const id = nanoid();
 				const tarFile: string = await new Promise((resolve) => {
 					const filename = path.join(os.tmpdir(), `testfs-${id}.tar`);
@@ -187,15 +189,15 @@ function build(
 							chunk.map((file) => fs.unlink(file).catch(() => void 0)),
 						);
 					}
+					debug('restore: deleted', toCleanup);
 
 					// Now restore the files from the backup
-					logger.debug('Restoring files', toKeep);
-
 					await new Promise((resolve) =>
 						createReadStream(tarFile)
 							.pipe(tar.extract(rootdir))
 							.on('finish', resolve),
 					);
+					debug('restore: recovered', toKeep);
 
 					// Remove the backup file
 					await fs.unlink(tarFile).catch(() => void 0);
@@ -206,21 +208,40 @@ function build(
 
 				// Now that the files are backed up in memory we can replace
 				// the originals
-				await replace(toUpdate).catch((e) =>
+				const modified = await replace(toUpdate).catch((e) =>
 					// If replace fails, we try to restore immediately, although
 					// it is unlikely to succeed, then throw the original exception
 					doRestore().then(() => {
 						throw e;
 					}),
 				);
+				debug('enable: test filesystem ready! Wrote', modified);
+
+				const doCleanup = async () => {
+					// Cleanup any files in the cleanup list first
+					const toCleanup = await fg(cleanup, { cwd: rootdir });
+					for (const chunk of toChunks(toCleanup, 50)) {
+						// Delete files in chunks of 50 ignoring failures
+						await Promise.all(
+							chunk.map((file) => fs.unlink(file).catch(() => void 0)),
+						);
+					}
+
+					return toCleanup;
+				};
 
 				// Only allow a single restore per instance
 				let isRestored = false;
 
-				// Return the restored
-				return {
+				// Return the enable object
+				const enabled = {
 					id,
 					backup: tarFile,
+					async cleanup() {
+						const deleted = await doCleanup();
+						debug('cleanup: deleted', deleted);
+						return enabled;
+					},
 					async restore() {
 						if (isRestored) {
 							return build(spec, { keep, cleanup });
@@ -235,6 +256,8 @@ function build(
 						return disabled;
 					},
 				};
+
+				return enabled;
 			});
 		},
 	};

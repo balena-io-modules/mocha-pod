@@ -122,7 +122,10 @@ export async function mochaGlobalSetup() {
 
 	// Build the image ad get intermediate images from build.
 	// Necessary for multi stage caching
-	const { image, stageIds } = await new Promise((resolve) => {
+	const { image, stageIds } = await new Promise<{
+		image: string;
+		stageIds: string[];
+	}>((resolve) => {
 		// Store the stage ids for caching
 		const ids = [] as string[];
 

@@ -17,6 +17,7 @@ When in this state, the only possible action is to
 
 ### Methods
 
+- [cleanup](TestFs.Enabled.md#cleanup)
 - [restore](TestFs.Enabled.md#restore)
 
 ## Properties
@@ -29,7 +30,7 @@ Location of the backup file
 
 #### Defined in
 
-[testfs/types.ts:120](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L120)
+[testfs/types.ts:120](https://github.com/balena-io-modules/mocha-pod/blob/ee6b4c1/lib/testfs/types.ts#L120)
 
 ___
 
@@ -41,9 +42,26 @@ Id of the testfs instance
 
 #### Defined in
 
-[testfs/types.ts:115](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L115)
+[testfs/types.ts:115](https://github.com/balena-io-modules/mocha-pod/blob/ee6b4c1/lib/testfs/types.ts#L115)
 
 ## Methods
+
+### <a id="cleanup" name="cleanup"></a> cleanup
+
+▸ **cleanup**(): `Promise`<[`Enabled`](TestFs.Enabled.md)\>
+
+Remove any files modified by the test as specified in the
+testfs `cleanup` configuration.
+
+#### Returns
+
+`Promise`<[`Enabled`](TestFs.Enabled.md)\>
+
+#### Defined in
+
+[testfs/types.ts:135](https://github.com/balena-io-modules/mocha-pod/blob/ee6b4c1/lib/testfs/types.ts#L135)
+
+___
 
 ### <a id="restore" name="restore"></a> restore
 
@@ -61,4 +79,4 @@ The following operations are performed during restore
 
 #### Defined in
 
-[testfs/types.ts:129](https://github.com/balena-io-modules/mocha-pod/blob/6ce4164/lib/testfs/types.ts#L129)
+[testfs/types.ts:129](https://github.com/balena-io-modules/mocha-pod/blob/ee6b4c1/lib/testfs/types.ts#L129)

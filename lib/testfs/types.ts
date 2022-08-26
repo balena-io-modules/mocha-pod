@@ -127,6 +127,12 @@ export interface Enabled {
 	 * - restore the original filesystem files from the backup
 	 */
 	restore(): Promise<Disabled>;
+
+	/**
+	 * Remove any files modified by the test as specified in the
+	 * testfs `cleanup` configuration.
+	 */
+	cleanup(): Promise<Enabled>;
 }
 
 export interface Config extends Opts {

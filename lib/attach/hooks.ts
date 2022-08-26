@@ -49,6 +49,7 @@ export const mochaHooks = {
 
 		// Read config and set testfs default configuration
 		const config = await Config();
+		logger.debug('Using Config', JSON.stringify(config, null, 2));
 
 		const { filesystem, keep, cleanup, ...extra } = {
 			basedir: config.basedir,
@@ -60,8 +61,6 @@ export const mochaHooks = {
 
 		// Use extra configurations in all tests
 		testfs.config(extra);
-
-		logger.debug('Using Config', JSON.stringify(config, null, 2));
 	},
 
 	async afterAll() {
