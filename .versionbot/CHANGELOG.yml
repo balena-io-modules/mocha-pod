@@ -1,0 +1,480 @@
+- commits:
+    - subject: Replace balenaCI with flowzone
+      hash: c536d41c2857018180123d45a3c0666aff523a93
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 0.8.1
+  title: ""
+  date: 2022-09-26T19:42:51.331Z
+- version: 0.8.0
+  date: 2022-08-26T21:36:30Z
+  commits:
+    - hash: ee6b4c1ebf2b1a0e23c74d963ef63602e66779f7
+      author: Felipe Lalanne
+      footers:
+        change-type: minor
+      subject: Add `testfs.cleanup` function
+      body: |-
+        This allows to delete any files modified by the test as defined
+        in the `testfs` configuration.
+        This also adds some improvement to the testfs debug logs.
+    - hash: abf8afd4d0581053e022f9fdf6de1eb63dddbb51
+      author: Felipe Lalanne
+      subject: Update typedoc documentation
+      body: null
+- version: 0.7.1
+- date: 2022-08-25T14:35:43Z
+- commits:
+    - hash: 4bbb30a29bd86a77a78dbefecadf2f84a82a5e02
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Fix locking configuration for testfs
+- commits:
+    - body: |-
+        Reverts BetterLock configuration to the defaults. The previous
+        configuration only allowed one element in the queue at the time and
+        added some useless logging to the debug log.
+        This also modifies the `enable` function to try to restore files if
+        anything happens during the replacement.
+- version: 0.7.0
+- date: 2022-08-24T21:28:10Z
+- commits:
+    - hash: ffabc68f5dbe7d5d2f5f06fea2754cb5dfd288b4
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - subject: Allow multiple testfs instances to be set at the same time
+- commits:
+    - body: |-
+        In previous versions, only one testfs instance was allowed to be
+        set at the time. This was enforced by a global lock to prevent causing
+        filesystem inconsistencies if restoring the same set of files.
+        While this technically worked, it was too restrictive, as users may have
+        wanted to have a global testfs instance for all tests, while having
+        local testfs instances for specific tests.
+        With this new feature, multiple testfs instances are allowed as long as
+        they are restored in reverse order as they were set.
+- commits:
+    - hash: 6ce4164d0a7af12381dd99e476731c761024ede9
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Set global `testfs` configuration in the `beforeAll` hook
+- commits:
+    - body: >-
+        This changes the behavior of the global testfs configuration in
+        `.mochapodrc.yml`.
+
+        The given configuration is now used to set a default instance in the `beforeAll` hook.
+
+        This change is still minor as the outcome of running the tests is still the same.
+- commits:
+    - hash: d27fe600bba6814e6d2c1f96a9fd2c4d98b2662e
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Update typedoc documentation
+- commits:
+    - ? body
+- version: 0.6.0
+- date: 2022-08-23T18:48:38Z
+- commits:
+    - hash: 8523923b94521873f8b57da821f8e04e0c1ed83f
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - subject: Add export to skip setup and go straight to hooks
+- commits:
+    - body: >-
+        Using `mocha -r mocha-pod/skip-setup` will just run the hooks and skip
+        the
+
+        image setup portion.
+- version: 0.5.0
+- date: 2022-08-22T20:44:09Z
+- commits:
+    - hash: 511c9261913d89adc6a8631744da4325bfeb351c
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - subject: Allow to use DOCKER_HOST to override configuration
+- commits:
+    - body: |-
+        If the `DOCKER_HOST` environment variable is set, it will be used to
+        override the values defined in `.mochapodrc.yml`. This is to allow
+        mocha-pod projects to be used in different contexts without the need to
+        modify the configuration file for each context.
+- commits:
+    - hash: 43aaf2f2446cb67e99d63e769bd257cb324f1d89
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Update typedoc documentation
+- commits:
+    - ? body
+- version: 0.4.1
+- date: 2022-08-22T18:30:22Z
+- commits:
+    - hash: 587e4113aa51f2fb59a13740c34fd3f7ef876ff5
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Allow to create empty files using testfs 'file' helper
+- commits:
+    - body: |-
+        This allows the `contents` property in the specification argument to
+        `testfs.file` to be optional. If not given, then an empty string will be
+        used as the file contents.
+- commits:
+    - hash: 88a0bdbcf993ba403e9824fead2740badde04016
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Update typedoc documentation
+- commits:
+    - ? body
+- version: 0.4.0
+- date: 2022-08-19T23:05:46Z
+- commits:
+    - hash: 0f0bd969a0380716523372922d03fd7483a7e3a9
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - subject: Add support for setting gid/uid on testfs
+- commits:
+    - body: |-
+        This allows to configure the target uid and gid when setting up the
+        filesystem
+- commits:
+    - hash: 01a67c29f906f5df8f49502db1a280d5e33e47ef
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Improve the image build for speed
+- commits:
+    - body: |-
+        Splits integration tests into an earlier stage of the build process.
+        Unit tests and linting are performed in a later stage to ensure that
+        only code that compiles is merged to master.
+        This means that when running `npm run test:integration` only integration
+        tests will be built, increasing development test speed.
+- commits:
+    - hash: 3b08ac8627d6088ff8badce14bdb84198a7962ec
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Update typedoc documentation
+- commits:
+    - ? body
+- version: 0.3.3
+- date: 2022-08-19T19:55:27Z
+- commits:
+    - hash: 5a8aec9cce853e9bee06b790c9ed8459feb0c5fb
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Ensure build cache gets written to disk
+- commits:
+    - body: Fixes missing `await` preventing the cache from getting written.
+- version: 0.3.2
+- date: 2022-08-19T19:15:06Z
+- commits:
+    - hash: f58a33708a58dea877487c54fc463ab296075946
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Fix build stage detection
+- commits:
+    - body: >-
+        This feature was completely broken. The build stages
+
+        are now detected successfully and without the need to store the full build
+
+        logs in memory.
+
+        This commit also fixes caching, the cache will now include the built
+
+        image id. This means the second run should use the cache unless
+
+        something has changed in the source files.
+- version: 0.3.1
+- date: 2022-08-19T17:02:19Z
+- commits:
+    - hash: 5f0051468a37329825efd7831fb519027b1efbd9
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Automatically detect deviceArch from uname
+- commits:
+    - body: |-
+        This makes the `deviceArch` setting in config only necessary if building
+        for a target architecture different than the one from the local machine.
+- commits:
+    - hash: 3d83388533e90838355cea05836b33428ebc48a7
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Update documentation
+- commits:
+    - ? body
+- version: 0.3.0
+- date: 2022-08-16T22:28:54Z
+- commits:
+    - hash: 7fe9fb2626c2ee0f62bcee3aac872796f33a6854
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Add tests for `replace` and bug fixes
+- commits:
+    - ? body
+- commits:
+    - hash: 11034e8c6ca8d8075ab9f5dc48e4e4146d8e735c
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - subject: Add additional file configuration options to tmpfs
+- commits:
+    - body: |-
+        This adds the capability to set the target files last access time
+        (atime), last modification time (mtime), as well providing a way to
+        create files referencing contents under a test data directory.
+- commits:
+    - hash: 6a6ddff840d8fa78350a8365afe62d42f5e25fde
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Add basedir to testfs configuration
+- commits:
+    - body: |-
+        The basedir is used as the base directory for file search when using
+        `testfs.from`
+- commits:
+    - hash: 69aa7e9f0be19ded8c9c6f98991c3ac0150f5cf8
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Update typedoc documentation
+- commits:
+    - ? body
+- version: 0.2.2
+- date: 2022-08-13T14:39:33Z
+- commits:
+    - hash: 2517ba55f5f5d53bbed2eefd4d562e17f4380ef2
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Small documentation tweaks
+- commits:
+    - ? body
+- version: 0.2.1
+- date: 2022-08-12T19:55:54Z
+- commits:
+    - hash: f208e7ea92d9127211046eb142d1e337a86e549d
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Add a Dockerfile for testing with Node 12
+- commits:
+    - body: |-
+        A bunch of our codebase has yet to be upgraded to latest Node.
+        This ensures this module does not break compatibility with this older
+        version.
+- version: 0.2.0
+- date: 2022-08-12T19:02:55Z
+- commits:
+    - hash: 198d05a3dbf203f2475c1afb1c87b2f4262d8afd
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Make test command configurable for mocha fixture
+- commits:
+    - ? body
+- commits:
+    - hash: 92d8f3a6916620cb8b5cb123932b4129d040dacb
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Read config path in Config function
+- commits:
+    - ? body
+- commits:
+    - hash: d3330e262a80e27ef18a59a2ee3ba30e310ba56f
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Split tests between unit and integration
+- commits:
+    - ? body
+- commits:
+    - hash: ff9eca0db70f101c9b864d919342305be17c6f22
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - subject: Add testfs utility module
+- commits:
+    - body: |-
+        The library allows to setup a testing environment before
+        running tests and easily restore between each test.
+- commits:
+    - hash: 9683105bb6d1c005a2a75d787fbdfe17f0d4d8f2
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Allow testfs to have a default configuration
+- commits:
+    - body: |-
+        This also adds the testfs config to MochaPodConfig
+        and loads the default config into testfs as part of the hooks.
+- commits:
+    - hash: 03b81c18dd6c9264b388750e318e55eac574abe6
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Improve the containerized environment detection
+- commits:
+    - ? body
+- commits:
+    - hash: c8a25d75c1c4676dcc794b66c0c9feeb14a90096
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Remove tar-stream dependency
+- commits:
+    - ? body
+- commits:
+    - hash: 01545b8737a3d1a73985787f3e43702b721fffbb
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Replace globby with fast-glob
+- commits:
+    - ? body
+- commits:
+    - hash: 59e2bf7f89efc792058c2a6935d9ca8d325f8142
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Improve documentation to tsdoc format
+- commits:
+    - ? body
+- commits:
+    - hash: 28717e198ad9c9444e2ef344d1847027616052b6
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Refactor testfs code for clarity
+- commits:
+    - ? body
+- commits:
+    - hash: d0f361da29c816b4ab02e6ca35338edfb1cc6eb0
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Make hooks agnostic to tmpfs internals
+- commits:
+    - ? body
+- commits:
+    - hash: 851397443cbb39e3d557d564c897132de7c83900
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Add typedoc for generated documentation
+- commits:
+    - ? body
+- commits:
+    - hash: b04923ff19bdcceba614836a2676ba7632062c22
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - subject: Generate typedoc documentation
+- commits:
+    - ? body
+- version: 0.1.1
+- date: 2022-08-03T16:30:47Z
+- commits:
+    - hash: f54436007f2af1070e78d77688141f017b1cae3e
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Fix module publish configuration
+- commits:
+    - body: |-
+        Updates the package author and adds `exports` to allow the module to be
+        used as specified on the README.
+- version: 0.1.0
+- date: 2022-08-01T22:03:36Z
+- commits:
+    - hash: 5838e6cab8830904d8defe8d03e79ea75d846c09
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - subject: Add documentation to .mochapodrc.yml and fix CI
+- commits:
+    - ? body
+- commits:
+    - hash: aeee7b9b493de2dc3ddf14d1717b3dfb9359a01b
+- commits:
+    - author: Felipe Lalanne
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - subject: Add the global setup fixture to build the image
+- commits:
+    - body: |-
+        This feature looks for a `Dockerfile` at the root directory
+        of the project, builds the image and runs the tests within a docker
+        container.
