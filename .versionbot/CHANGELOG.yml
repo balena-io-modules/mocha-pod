@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update dependency @types/mocha to 10.0.0
+      hash: 644b30fe841ae598396b809a66eca09a2457476d
+      body: |
+        Update @types/mocha to 10.0.0
+
+        Update @types/mocha from 9.1.1 to 10.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 0.8.3
+  title: ""
+  date: 2022-10-28T14:57:27.757Z
+- commits:
     - subject: Update dependency @balena/lint to 6.2.0
       hash: 58977a7b8ec56a45e1a20996d331df3c61cfc122
       body: |
