@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update dependency lint-staged to 13.0.3
+      hash: bf99de2a1458e05cc9de5f7d18decee9db87d28d
+      body: |
+        Update lint-staged to 13.0.3
+
+        Update lint-staged from 11.2.6 to 13.0.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 0.8.6
+  title: ""
+  date: 2022-10-28T16:30:19.919Z
+- commits:
     - subject: Update dependency husky to 8.0.1
       hash: 86e2bd937f986a5b1ea48347e95b36452282f9dd
       body: |
