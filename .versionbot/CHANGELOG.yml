@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update dependency husky to 8.0.1
+      hash: 86e2bd937f986a5b1ea48347e95b36452282f9dd
+      body: |
+        Update husky to 8.0.1
+
+        Update husky from 4.3.8 to 8.0.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 0.8.5
+  title: ""
+  date: 2022-10-28T15:56:40.256Z
+- commits:
     - subject: Update dependency balena-config-karma to 4.0.1
       hash: 3d75b064a2e5de3abf1be2c91e0f0e950dce6d77
       body: |
