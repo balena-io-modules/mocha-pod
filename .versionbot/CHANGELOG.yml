@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update dependency @balena/lint to 6.2.0
+      hash: 58977a7b8ec56a45e1a20996d331df3c61cfc122
+      body: |
+        Update @balena/lint to 6.2.0
+
+        Update @balena/lint from 5.4.2 to 6.2.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 0.8.2
+  title: ""
+  date: 2022-10-28T14:35:16.093Z
+- commits:
     - subject: Replace balenaCI with flowzone
       hash: c536d41c2857018180123d45a3c0666aff523a93
       body: ""
@@ -86,7 +101,7 @@
 - commits:
     - subject: Update typedoc documentation
 - commits:
-    - ? body
+    - body: null
 - version: 0.6.0
 - date: 2022-08-23T18:48:38Z
 - commits:
@@ -100,8 +115,7 @@
     - subject: Add export to skip setup and go straight to hooks
 - commits:
     - body: >-
-        Using `mocha -r mocha-pod/skip-setup` will just run the hooks and skip
-        the
+        Using `mocha -r mocha-pod/skip-setup` will just run the hooks and skip the
 
         image setup portion.
 - version: 0.5.0
@@ -128,7 +142,7 @@
 - commits:
     - subject: Update typedoc documentation
 - commits:
-    - ? body
+    - body: null
 - version: 0.4.1
 - date: 2022-08-22T18:30:22Z
 - commits:
@@ -152,7 +166,7 @@
 - commits:
     - subject: Update typedoc documentation
 - commits:
-    - ? body
+    - body: null
 - version: 0.4.0
 - date: 2022-08-19T23:05:46Z
 - commits:
@@ -188,7 +202,7 @@
 - commits:
     - subject: Update typedoc documentation
 - commits:
-    - ? body
+    - body: null
 - version: 0.3.3
 - date: 2022-08-19T19:55:27Z
 - commits:
@@ -248,7 +262,7 @@
 - commits:
     - subject: Update documentation
 - commits:
-    - ? body
+    - body: null
 - version: 0.3.0
 - date: 2022-08-16T22:28:54Z
 - commits:
@@ -261,7 +275,7 @@
 - commits:
     - subject: Add tests for `replace` and bug fixes
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: 11034e8c6ca8d8075ab9f5dc48e4e4146d8e735c
 - commits:
@@ -293,7 +307,7 @@
 - commits:
     - subject: Update typedoc documentation
 - commits:
-    - ? body
+    - body: null
 - version: 0.2.2
 - date: 2022-08-13T14:39:33Z
 - commits:
@@ -306,7 +320,7 @@
 - commits:
     - subject: Small documentation tweaks
 - commits:
-    - ? body
+    - body: null
 - version: 0.2.1
 - date: 2022-08-12T19:55:54Z
 - commits:
@@ -332,7 +346,7 @@
 - commits:
     - subject: Make test command configurable for mocha fixture
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: 92d8f3a6916620cb8b5cb123932b4129d040dacb
 - commits:
@@ -340,7 +354,7 @@
 - commits:
     - subject: Read config path in Config function
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: d3330e262a80e27ef18a59a2ee3ba30e310ba56f
 - commits:
@@ -348,7 +362,7 @@
 - commits:
     - subject: Split tests between unit and integration
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: ff9eca0db70f101c9b864d919342305be17c6f22
 - commits:
@@ -379,7 +393,7 @@
 - commits:
     - subject: Improve the containerized environment detection
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: c8a25d75c1c4676dcc794b66c0c9feeb14a90096
 - commits:
@@ -387,7 +401,7 @@
 - commits:
     - subject: Remove tar-stream dependency
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: 01545b8737a3d1a73985787f3e43702b721fffbb
 - commits:
@@ -395,7 +409,7 @@
 - commits:
     - subject: Replace globby with fast-glob
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: 59e2bf7f89efc792058c2a6935d9ca8d325f8142
 - commits:
@@ -403,7 +417,7 @@
 - commits:
     - subject: Improve documentation to tsdoc format
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: 28717e198ad9c9444e2ef344d1847027616052b6
 - commits:
@@ -411,7 +425,7 @@
 - commits:
     - subject: Refactor testfs code for clarity
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: d0f361da29c816b4ab02e6ca35338edfb1cc6eb0
 - commits:
@@ -419,7 +433,7 @@
 - commits:
     - subject: Make hooks agnostic to tmpfs internals
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: 851397443cbb39e3d557d564c897132de7c83900
 - commits:
@@ -427,7 +441,7 @@
 - commits:
     - subject: Add typedoc for generated documentation
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: b04923ff19bdcceba614836a2676ba7632062c22
 - commits:
@@ -435,7 +449,7 @@
 - commits:
     - subject: Generate typedoc documentation
 - commits:
-    - ? body
+    - body: null
 - version: 0.1.1
 - date: 2022-08-03T16:30:47Z
 - commits:
@@ -463,7 +477,7 @@
 - commits:
     - subject: Add documentation to .mochapodrc.yml and fix CI
 - commits:
-    - ? body
+    - body: null
 - commits:
     - hash: aeee7b9b493de2dc3ddf14d1717b3dfb9359a01b
 - commits:
