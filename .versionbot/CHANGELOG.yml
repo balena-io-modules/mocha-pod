@@ -1,4 +1,18 @@
 - commits:
+    - subject: Fix nanoid version
+      hash: fd170bbf5ab207efeec912d46c486d1990ee8d34
+      body: |
+        Nanoid 4 and above is ESM only so this fixes the version to 3.x.x to
+        avoid automated bumps by renovatebot.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 0.8.7
+  title: ""
+  date: 2022-11-10T15:39:25.788Z
+- commits:
     - subject: Update dependency lint-staged to 13.0.3
       hash: bf99de2a1458e05cc9de5f7d18decee9db87d28d
       body: |
