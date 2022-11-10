@@ -1,4 +1,79 @@
 - commits:
+    - subject: Add restore() method to TestFs.Disabled
+      hash: 9bb1295295d9e369a35f671dd0952c6b7c69aa39
+      body: >
+        This is a DX improvement as it allows TestFs instances to be defined once
+
+        and used multiple times. The instance will store the internal state and
+
+        only perform the restore operation if the instance has not yet been
+
+        enabled. Enabling the same intance twice is not allowed though and it
+
+        will throw an error.
+
+
+        Example:
+
+
+        ```ts
+
+        // Prepare a new test fs.
+
+        const tmp = testfs({ '/etc/test.conf': 'logging=true' });
+
+
+        // Enable the instance. The /etc/test.conf file will be created
+
+        await tmp.enable();
+
+
+        // The file should be available after setup
+
+        expect(await fs.readFile('/etc/test.conf', 'utf-8')).to.equal('logging=true');
+
+
+        // RUN YOUR TESTS HERE
+
+
+        // Restore the filesystem
+
+        // Since test.conf did not exist before the enable(), this step removes the file
+
+        await tmp.restore();
+
+
+        // We can enable the instance again for new tests
+
+        await tmp.enable();
+
+
+        // Trying to enable again before restore() will throw and
+
+        // restore the system to the previous state
+
+        await expect(tmp.enable()).to.be.rejected();
+
+
+        // This should succeed
+
+        await expect(fs.access('/etc/test.conf')).to.be.rejected;
+
+
+        // Trying to restore again will have no effect
+
+        await tmp.restore();
+
+        ```
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Felipe Lalanne
+      nested: []
+  version: 0.9.0
+  title: ""
+  date: 2022-11-10T20:52:57.615Z
+- commits:
     - subject: Fix nanoid version
       hash: fd170bbf5ab207efeec912d46c486d1990ee8d34
       body: |
