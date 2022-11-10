@@ -48,10 +48,28 @@ describe('testfs: integration tests', function () {
 		).to.be.rejected;
 
 		// Prepare a new test fs
-		const tmp = await testfs({
+		const tmp = testfs({
 			// This file doesn't exist before the test
 			'/etc/other.conf': 'debug=1',
-		}).enable();
+		});
+
+		// Enable the instance
+		await tmp.enable();
+
+		// The file should be available after setup
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
+
+		// Restore the filesystem
+		await tmp.restore();
+
+		// The file should not be available after restoration
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist after the test',
+		).to.be.rejected;
+
+		// Enable the instance again
+		await tmp.enable();
 
 		// The file should be available after setup
 		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
@@ -184,6 +202,67 @@ describe('testfs: integration tests', function () {
 		// The file system should be restored to the original state by the exception
 		await expect(fs.access('/etc/other.conf')).to.be.rejected;
 		await expect(fs.access('/usr/etc/other.conf')).to.be.rejected;
+	});
+
+	it('rejects enabling an instance more than once', async () => {
+		// The file should not exist before the test
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file should not exist before the test',
+		).to.be.rejected;
+
+		// Prepare a new test fs
+		const tmp = testfs({
+			// This file doesn't exist before the test
+			'/etc/other.conf': 'debug=1',
+		});
+
+		// Enable the instance
+		await tmp.enable();
+
+		// The file has been created
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=1');
+
+		// Try to enable the instance again
+		await expect(tmp.enable()).to.be.rejected;
+
+		// The file system should be restored to the original state by the exception
+		await expect(
+			fs.access('/etc/other.conf'),
+			'file was restored before the exception',
+		).to.be.rejected;
+	});
+
+	it('restoring an instance before it is enabled should not have any side effects', async () => {
+		// Create a dummy test file.
+		await fs.writeFile('/etc/other.conf', 'debug=0');
+
+		// Prepare a new test fs
+		const tmp = testfs({}, { cleanup: ['/etc/other.conf'] });
+
+		// The file still exists because the instance has not been enabled
+		await tmp.restore();
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=0');
+
+		// Enable the instance
+		await tmp.enable();
+
+		// The file still has the same value
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=0');
+
+		// Modify the file
+		await fs.writeFile('/etc/other.conf', 'debug=1');
+
+		// The file has been restored to the initial state
+		await tmp.restore();
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=0');
+
+		// Further restores have no effect
+		await tmp.restore();
+		expect(await fs.readFile('/etc/other.conf', 'utf-8')).to.equal('debug=0');
+
+		// Restore the filesystem
+		await fs.unlink('/etc/other.conf');
 	});
 
 	it('setup should allow to reference files through the directory spec', async () => {
