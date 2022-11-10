@@ -23,6 +23,7 @@ import {
 } from './types';
 
 class TestFsLockError extends Error {}
+class TestFsAlreadyEnabled extends Error {}
 
 function toChunks<T = any>(array: T[], chunkSize: number) {
 	return Array.from(
@@ -142,15 +143,36 @@ function build(
 
 	// Merge the given spec to the default spec.
 	const toUpdate = flatten({ ...defaultSpec, ...spec });
-	return {
+
+	// Record the instance state
+	let isDisabled = true;
+	let enabled: Enabled = {
+		id: '0',
+		restore: () => Promise.resolve(disabled),
+		cleanup: () => Promise.resolve(enabled),
+	};
+	const disabled: Disabled = {
 		async enable() {
+			if (!isDisabled) {
+				await enabled.restore();
+				throw new TestFsAlreadyEnabled(`TestFs instance already enabled`);
+			}
+
 			return lock.acquire(async () => {
-				const lookup = await Promise.all(
-					Object.keys(toUpdate).map((filename) =>
-						fs
-							.access(path.resolve(rootdir, filename))
-							.then(() => ({ filename, exists: true }))
-							.catch(() => ({ filename, exists: false })),
+				const lookup = (
+					await Promise.all(
+						Object.keys(toUpdate).map((filename) =>
+							fs
+								.access(path.resolve(rootdir, filename))
+								.then(() => ({ filename, exists: true }))
+								.catch(() => ({ filename, exists: false })),
+						),
+					)
+				).concat(
+					// If any files in the cleanup list exist before the test, we need to
+					// add them to the backup
+					await fg(cleanup, { cwd: rootdir }).then((files) =>
+						files.map((filename) => ({ filename, exists: true })),
 					),
 				);
 
@@ -202,8 +224,12 @@ function build(
 					// Remove the backup file
 					await fs.unlink(tarFile).catch(() => void 0);
 
-					// Return a new instance from the original option list
-					return build(spec, { keep, cleanup });
+					// Mark the system as disabled to prevent this function from
+					// doing any damage
+					isDisabled = true;
+
+					// Return the original instance from the original option list
+					return disabled;
 				};
 
 				// Now that the files are backed up in memory we can replace
@@ -230,37 +256,34 @@ function build(
 					return toCleanup;
 				};
 
-				// Only allow a single restore per instance
-				let isRestored = false;
-
 				// Return the enable object
-				const enabled = {
+				enabled = {
 					id,
-					backup: tarFile,
 					async cleanup() {
 						const deleted = await doCleanup();
 						debug('cleanup: deleted', deleted);
 						return enabled;
 					},
 					async restore() {
-						if (isRestored) {
-							return build(spec, { keep, cleanup });
+						if (isDisabled) {
+							return disabled;
 						}
 
-						const disabled = await lock.release(id, doRestore);
-
-						// Mark the system as restored to prevent this function from
-						// doing any damage
-						isRestored = true;
-
-						return disabled;
+						return lock.release(id, doRestore);
 					},
 				};
+
+				// Mark the instance as enabled
+				isDisabled = false;
 
 				return enabled;
 			});
 		},
+		async restore() {
+			return enabled.restore();
+		},
 	};
+	return disabled;
 }
 
 async function leftovers(): Promise<string[]> {

@@ -115,11 +115,6 @@ export interface Enabled {
 	readonly id: string;
 
 	/**
-	 * Location of the backup file
-	 */
-	readonly backup: string;
-
-	/**
 	 * Restore the environment to the state before the filesystem was setup
 	 *
 	 * The following operations are performed during restore
@@ -157,6 +152,15 @@ export interface Disabled {
 	 * Note that attempts to call the setup function more than once will cause an exception.
 	 */
 	enable(): Promise<Enabled>;
+
+	/**
+	 * Restore the environment to the state before the filesystem was setup
+	 *
+	 * The following operations are performed during restore
+	 * - delete any files in the `cleanup` list
+	 * - restore the original filesystem files from the backup
+	 */
+	restore(): Promise<Disabled>;
 }
 
 export interface TestFs {
