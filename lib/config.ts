@@ -64,7 +64,14 @@ export type Config = {
 	 * Extra options to pass to the image build.
 	 * See https://docs.docker.com/engine/api/v1.41/#tag/Image/operation/ImageBuild
 	 *
-	 * @defaultValue `{}`
+	 * @defaultValue `{
+	 *   buildArgs: {
+	 *   		NODE_VERSION // the host environment node version
+	 * 			NODE_VERSION_MAJOR // the host environment major node version
+	 * 			BALENA_ARCH // the host architecture or the configuration value set by the user
+	 * 			BALENA_MACHINE_NAME // the machine name as set by the user or inferred from the architecture
+	 *   }
+	 * }`
 	 */
 	dockerBuildOpts: { [key: string]: any };
 
@@ -267,11 +274,28 @@ export async function Config(
 	// Infer the device type one more time if the user has changed it
 	const deviceType = inferDeviceTypeFormArch(conf.deviceArch);
 
+	// Add extra variables to build args
+	const buildArgs = {
+		NODE_VERSION: process.versions.node,
+		NODE_VERSION_MAJOR: process.versions.node.split('.').shift(),
+		BALENA_ARCH: deviceArch,
+		BALENA_MACHINE_NAME: deviceType,
+	};
+
 	// Allow overriding the configured docker host using an env var
 	const dockerHost = process.env.DOCKER_HOST ?? conf.dockerHost;
 
 	// Use absolute path for the basedir
-	return { ...conf, basedir: toAbsolute(conf.basedir), deviceType, dockerHost };
+	return {
+		...conf,
+		basedir: toAbsolute(conf.basedir),
+		deviceType,
+		dockerHost,
+		dockerBuildOpts: {
+			...conf.dockerBuildOpts,
+			buildArgs: { buildArgs, ...conf.dockerBuildOpts.buildArgs },
+		},
+	};
 }
 
 export default Config;

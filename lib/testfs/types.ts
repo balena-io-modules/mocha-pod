@@ -154,11 +154,11 @@ export interface Disabled {
 	enable(): Promise<Enabled>;
 
 	/**
-	 * Restore the environment to the state before the filesystem was setup
+	 * If the instance has been enabled, restore the environment to the
+	 * state before the filesystem was setup
 	 *
-	 * The following operations are performed during restore
-	 * - delete any files in the `cleanup` list
-	 * - restore the original filesystem files from the backup
+	 * Nothing is done if the instance has not yet been enabled or it has alread
+	 * been restored.
 	 */
 	restore(): Promise<Disabled>;
 }

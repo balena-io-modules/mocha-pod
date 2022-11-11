@@ -9,6 +9,7 @@
 ### Methods
 
 - [enable](TestFs.Disabled.md#enable)
+- [restore](TestFs.Disabled.md#restore)
 
 ## Methods
 
@@ -32,4 +33,24 @@ Note that attempts to call the setup function more than once will cause an excep
 
 #### Defined in
 
-[testfs/types.ts:159](https://github.com/balena-io-modules/mocha-pod/blob/ee6b4c1/lib/testfs/types.ts#L159)
+[testfs/types.ts:154](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L154)
+
+___
+
+### <a id="restore" name="restore"></a> restore
+
+▸ **restore**(): `Promise`<[`Disabled`](TestFs.Disabled.md)\>
+
+If the instance has been enabled, restore the environment to the
+state before the filesystem was setup
+
+Nothing is done if the instance has not yet been enabled or it has alread
+been restored.
+
+#### Returns
+
+`Promise`<[`Disabled`](TestFs.Disabled.md)\>
+
+#### Defined in
+
+[testfs/types.ts:163](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L163)
