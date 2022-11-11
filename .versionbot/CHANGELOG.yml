@@ -1,4 +1,27 @@
 - commits:
+    - subject: Add build arguments to the docker image build
+      hash: 905832d4c795c396c3a59adbb1909683fc71a7ef
+      body: |
+        This passes the following build arguments to the docker build
+
+        - NODE_VERSION: full Node version of the host
+        - NODE_MAJOR_VERSION: major Node version of the host
+        - BALENA_ARCH: infered balena arch from the host or configured by the
+          user
+        - BALENA_MACHINE_NAME: infered balena machine name from the host or as
+          configured by the user
+
+         This allows to better work with CI environments and modify the docker
+         build depending on the CI environment node version.
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Felipe Lalanne
+      nested: []
+  version: 0.10.0
+  title: ""
+  date: 2022-11-11T14:10:34.593Z
+- commits:
     - subject: Add restore() method to TestFs.Disabled
       hash: 9bb1295295d9e369a35f671dd0952c6b7c69aa39
       body: >
