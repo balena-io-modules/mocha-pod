@@ -1,4 +1,6 @@
-FROM node:16-alpine as build
+ARG NODE_VERSION_MAJOR=16
+
+FROM node:${NODE_VERSION_MAJOR}-alpine as build
 
 WORKDIR /usr/src/app
 
