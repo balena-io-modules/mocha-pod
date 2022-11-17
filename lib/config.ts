@@ -65,7 +65,7 @@ export type Config = {
 	 * See https://docs.docker.com/engine/api/v1.41/#tag/Image/operation/ImageBuild
 	 *
 	 * @defaultValue `{
-	 *   buildArgs: {
+	 *   buildargs: {
 	 *   		NODE_VERSION // the host environment node version
 	 * 			NODE_VERSION_MAJOR // the host environment major node version
 	 * 			BALENA_ARCH // the host architecture or the configuration value set by the user
@@ -275,7 +275,7 @@ export async function Config(
 	const deviceType = inferDeviceTypeFormArch(conf.deviceArch);
 
 	// Add extra variables to build args
-	const buildArgs = {
+	const buildargs = {
 		NODE_VERSION: process.versions.node,
 		NODE_VERSION_MAJOR: process.versions.node.split('.').shift(),
 		BALENA_ARCH: deviceArch,
@@ -293,7 +293,7 @@ export async function Config(
 		dockerHost,
 		dockerBuildOpts: {
 			...conf.dockerBuildOpts,
-			buildArgs: { buildArgs, ...conf.dockerBuildOpts.buildArgs },
+			buildargs: { ...buildargs, ...conf.dockerBuildOpts.buildargs },
 		},
 	};
 }
