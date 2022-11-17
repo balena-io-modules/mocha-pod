@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix docker build args parameter name
+      hash: 99be5a7b958ec93b585e8b3f4e93dcfdb02b626c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 0.10.1
+  title: ""
+  date: 2022-11-17T19:44:05.551Z
+- commits:
     - subject: Add build arguments to the docker image build
       hash: 905832d4c795c396c3a59adbb1909683fc71a7ef
       body: |
