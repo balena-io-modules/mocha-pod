@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove Node 12 support
+      hash: 29fdc6a6bac56057a08f760bf52011e85b6e6d03
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 0.10.2
+  title: ""
+  date: 2023-01-20T13:45:53.163Z
+- commits:
     - subject: Fix docker build args parameter name
       hash: 99be5a7b958ec93b585e8b3f4e93dcfdb02b626c
       body: ""
