@@ -80,7 +80,7 @@
     "dockerode": "^3.3.2",
     "fast-glob": "^3.2.11",
     "js-yaml": "^4.1.0",
-    "nanoid": "3.3.4",
+    "nanoid": "4.0.1",
     "tar-fs": "^2.1.1"
   },
   "versionist": {
