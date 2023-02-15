@@ -5,7 +5,6 @@ import * as tar from 'tar-fs';
 import logger from '../logger';
 import { strict as assert } from 'assert';
 import { BetterLock } from 'better-lock';
-import { nanoid } from 'nanoid';
 
 import { createReadStream, createWriteStream, promises as fs } from 'fs';
 import { flatten, replace, fileRef, fileSpec } from './utils';
@@ -157,6 +156,8 @@ function build(
 				await enabled.restore();
 				throw new TestFsAlreadyEnabled(`TestFs instance already enabled`);
 			}
+
+			const { nanoid } = await import('nanoid');
 
 			return lock.acquire(async () => {
 				const lookup = (
