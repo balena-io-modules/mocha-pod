@@ -1,4 +1,17 @@
 - commits:
+    - subject: Set module resolution to Node16 for ESM compatibility
+      hash: f21ceddc6837859e36b2c041851854acdc185ed5
+      body: |
+        Also update the nanoid module to the latest version (now ESM)
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 0.10.4
+  title: ""
+  date: 2023-02-16T13:22:20.481Z
+- commits:
     - subject: Update dependency rimraf to 4.1.1
       hash: 9ffbf4e343308bd4762e15e59bd4301b6b59e58a
       body: |
