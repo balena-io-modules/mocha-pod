@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update flowzone config to recommended defaults
+      hash: f0ad296341a42ab88055ec36316f2f5d34835e8f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 0.10.6
+  title: ""
+  date: 2023-06-09T22:23:14.154Z
+- commits:
     - subject: Update dependency typedoc to ^0.24.0
       hash: 9ede4f0d139904f243297d016f9123bbb3f45398
       body: |
