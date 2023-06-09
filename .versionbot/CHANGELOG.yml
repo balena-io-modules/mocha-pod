@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency typedoc to ^0.24.0
+      hash: 9ede4f0d139904f243297d016f9123bbb3f45398
+      body: |
+        Update typedoc from 0.23.28 to 0.24.7
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 0.10.5
+  title: ""
+  date: 2023-06-09T18:50:43.228Z
+- commits:
     - subject: Set module resolution to Node16 for ESM compatibility
       hash: f21ceddc6837859e36b2c041851854acdc185ed5
       body: |
@@ -77,7 +90,8 @@
     - subject: Add restore() method to TestFs.Disabled
       hash: 9bb1295295d9e369a35f671dd0952c6b7c69aa39
       body: >
-        This is a DX improvement as it allows TestFs instances to be defined once
+        This is a DX improvement as it allows TestFs instances to be defined
+        once
 
         and used multiple times. The instance will store the internal state and
 
@@ -339,7 +353,8 @@
     - subject: Add export to skip setup and go straight to hooks
 - commits:
     - body: >-
-        Using `mocha -r mocha-pod/skip-setup` will just run the hooks and skip the
+        Using `mocha -r mocha-pod/skip-setup` will just run the hooks and skip
+        the
 
         image setup portion.
 - version: 0.5.0
