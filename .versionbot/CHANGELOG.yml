@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency rimraf to v5
+      hash: 5ce58997e31b54b81879517b444421ea3d4e0132
+      body: |
+        Update rimraf from 4.4.1 to 5.0.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 0.10.7
+  title: ""
+  date: 2023-06-10T18:24:50.343Z
+- commits:
     - subject: Update flowzone config to recommended defaults
       hash: f0ad296341a42ab88055ec36316f2f5d34835e8f
       body: ""
