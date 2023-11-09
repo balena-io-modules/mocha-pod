@@ -73,7 +73,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@balena/compose": "^2.1.0",
+    "@balena/compose": "^3.0.0",
     "@balena/dockerignore": "^1.0.2",
     "better-lock": "^2.0.3",
     "debug": "^4.3.4",
