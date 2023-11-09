@@ -81,7 +81,7 @@
     "fast-glob": "^3.2.11",
     "js-yaml": "^4.1.0",
     "nanoid": "^4.0.1",
-    "tar-fs": "^2.1.1"
+    "tar-fs": "^3.0.0"
   },
   "versionist": {
     "publishedAt": "2023-11-09T16:46:40.830Z"
