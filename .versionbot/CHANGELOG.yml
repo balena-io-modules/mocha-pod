@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency @balena/compose to v3
+      hash: 0c37f754b0792acdc1a405b0a6d49bb6eb186d47
+      body: |
+        Update @balena/compose from 2.3.0 to 3.0.0
+      footer:
+        Change-type: major
+        change-type: major
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 1.0.0
+  title: ""
+  date: 2023-11-09T16:46:40.728Z
+- commits:
     - subject: Update dependency typescript to v5
       hash: be6bc5006b5993399770b848cc8b61f87d340b9b
       body: |
