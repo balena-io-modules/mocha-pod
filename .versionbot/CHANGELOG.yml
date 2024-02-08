@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove support for Node < 18
+      hash: e11000e7ff9696dc10d073254470f970e2080206
+      body: ""
+      footer:
+        Change-type: major
+        change-type: major
+      author: Felipe Lalanne
+      nested: []
+  version: 2.0.0
+  title: ""
+  date: 2024-02-08T15:15:32.192Z
+- commits:
     - subject: Update dependency @balena/compose to v3
       hash: 0c37f754b0792acdc1a405b0a6d49bb6eb186d47
       body: |
