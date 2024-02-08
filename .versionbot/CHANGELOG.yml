@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency @types/tar-stream to v3
+      hash: 5e74a7fb2493ff9eada96010a53955f8ecf43750
+      body: |
+        Update @types/tar-stream from 2.2.3 to 3.1.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 2.0.1
+  title: ""
+  date: 2024-02-08T17:27:29.821Z
+- commits:
     - subject: Remove support for Node < 18
       hash: e11000e7ff9696dc10d073254470f970e2080206
       body: ""
