@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update @balena/lint to v7
+      hash: 1e542dd88ec64dcd2639163cbce3fda7eb3102ee
+      body: |
+        This also required to bump typescript to 5.3.3 and typedoc to the latest
+        version. Documentation has been re-generated with this latest version
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 2.0.2
+  title: ""
+  date: 2024-03-06T22:09:47.827Z
+- commits:
     - subject: Update dependency @types/tar-stream to v3
       hash: 5e74a7fb2493ff9eada96010a53955f8ecf43750
       body: |
@@ -195,7 +209,8 @@
 
         // The file should be available after setup
 
-        expect(await fs.readFile('/etc/test.conf', 'utf-8')).to.equal('logging=true');
+        expect(await fs.readFile('/etc/test.conf',
+        'utf-8')).to.equal('logging=true');
 
 
         // RUN YOUR TESTS HERE
@@ -203,7 +218,8 @@
 
         // Restore the filesystem
 
-        // Since test.conf did not exist before the enable(), this step removes the file
+        // Since test.conf did not exist before the enable(), this step removes
+        the file
 
         await tmp.restore();
 
@@ -405,9 +421,11 @@
         This changes the behavior of the global testfs configuration in
         `.mochapodrc.yml`.
 
-        The given configuration is now used to set a default instance in the `beforeAll` hook.
+        The given configuration is now used to set a default instance in the
+        `beforeAll` hook.
 
-        This change is still minor as the outcome of running the tests is still the same.
+        This change is still minor as the outcome of running the tests is still
+        the same.
 - commits:
     - hash: d27fe600bba6814e6d2c1f96a9fd2c4d98b2662e
 - commits:
@@ -546,7 +564,8 @@
     - body: >-
         This feature was completely broken. The build stages
 
-        are now detected successfully and without the need to store the full build
+        are now detected successfully and without the need to store the full
+        build
 
         logs in memory.
 
