@@ -29,30 +29,30 @@ Id of the testfs instance
 
 #### Defined in
 
-[testfs/types.ts:115](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L115)
+[testfs/types.ts:115](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L115)
 
 ## Methods
 
 ### <a id="cleanup" name="cleanup"></a> cleanup
 
-▸ **cleanup**(): `Promise`<[`Enabled`](TestFs.Enabled.md)\>
+▸ **cleanup**(): `Promise`\<[`Enabled`](TestFs.Enabled.md)\>
 
 Remove any files modified by the test as specified in the
 testfs `cleanup` configuration.
 
 #### Returns
 
-`Promise`<[`Enabled`](TestFs.Enabled.md)\>
+`Promise`\<[`Enabled`](TestFs.Enabled.md)\>
 
 #### Defined in
 
-[testfs/types.ts:130](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L130)
+[testfs/types.ts:130](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L130)
 
 ___
 
 ### <a id="restore" name="restore"></a> restore
 
-▸ **restore**(): `Promise`<[`Disabled`](TestFs.Disabled.md)\>
+▸ **restore**(): `Promise`\<[`Disabled`](TestFs.Disabled.md)\>
 
 Restore the environment to the state before the filesystem was setup
 
@@ -62,8 +62,8 @@ The following operations are performed during restore
 
 #### Returns
 
-`Promise`<[`Disabled`](TestFs.Disabled.md)\>
+`Promise`\<[`Disabled`](TestFs.Disabled.md)\>
 
 #### Defined in
 
-[testfs/types.ts:124](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L124)
+[testfs/types.ts:124](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L124)

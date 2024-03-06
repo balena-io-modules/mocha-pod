@@ -3,7 +3,7 @@ import * as YAML from 'js-yaml';
 import * as path from 'path';
 import logger from './logger';
 
-import * as TestFs from './testfs';
+import type * as TestFs from './testfs';
 
 import { exec as execSync } from 'child_process';
 import { promisify } from 'util';
@@ -208,10 +208,10 @@ function slugify(text: string) {
 		.toString() // Cast to string (optional)
 		.normalize('NFKD') // The normalize() using NFKD method returns the Unicode Normalization Form of a given string.
 		.toLowerCase() // Convert the string to lowercase letters
-		.replace(/[^\w\-]+/g, ' ') // Replace all non-word chars with ' '
+		.replace(/[^\w-]+/g, ' ') // Replace all non-word chars with ' '
 		.trim() // Remove whitespace from both sides of a string (optional)
 		.replace(/\s+/g, '-') // Replace spaces with -
-		.replace(/\-\-+/g, '-'); // Replace multiple - with single -
+		.replace(/--+/g, '-'); // Replace multiple - with single -
 }
 
 /**

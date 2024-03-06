@@ -21,7 +21,7 @@
 
 Create a disabled testfs configuration from the given directory spec.
 
-Calling the [enable](interfaces/TestFs.Disabled.md#enable) method will prepare the filesystem for testing
+Calling the [TestFs.Disabled.enable](interfaces/TestFs.Disabled.md#enable) method will prepare the filesystem for testing
 operations.
 
 **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
@@ -31,8 +31,8 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `spec?` | [`Directory`](interfaces/TestFs.Directory.md) | Directory specification with files that need to be               exist after set-up of the test fs. If the file exists previously               in the given location it will be added to the `keep` list for restoring later.               If it doesn't it will be added to the `cleanup` list to be removed during cleanup |
-| `opts?` | `Partial`<[`Opts`](interfaces/TestFs.Opts.md)\> | Additional options for the test fs. |
+| `spec?` | [`Directory`](interfaces/TestFs.Directory.md) | Directory specification with files that need to be exist after set-up of the test fs. If the file exists previously in the given location it will be added to the `keep` list for restoring later. If it doesn't it will be added to the `cleanup` list to be removed during cleanup |
+| `opts?` | `Partial`\<[`Opts`](interfaces/TestFs.Opts.md)\> | Additional options for the test fs. |
 
 #### Returns
 
@@ -42,4 +42,4 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:183](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L183)
+[testfs/testfs.ts:294](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/testfs.ts#L294)

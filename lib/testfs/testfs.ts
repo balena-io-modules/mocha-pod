@@ -1,6 +1,6 @@
-import * as fg from 'fast-glob';
-import * as os from 'os';
-import * as path from 'path';
+import fg from 'fast-glob';
+import os from 'os';
+import path from 'path';
 import * as tar from 'tar-fs';
 import logger from '../logger';
 import { strict as assert } from 'assert';
@@ -9,7 +9,7 @@ import { BetterLock } from 'better-lock';
 import { createReadStream, createWriteStream, promises as fs } from 'fs';
 import { flatten, replace, fileRef, fileSpec } from './utils';
 
-import {
+import type {
 	Config,
 	Directory,
 	Disabled,

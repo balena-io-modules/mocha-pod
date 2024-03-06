@@ -1,7 +1,7 @@
 import { expect } from '~/testing';
 
 import { promises as fs } from 'fs';
-import * as mock from 'mock-fs';
+import mock from 'mock-fs';
 import { dir, flatten, replace, fileRef, fileSpec } from './utils';
 
 describe('testfs/utils: unit tests', function () {

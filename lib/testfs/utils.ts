@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 
-import {
+import type {
 	Directory,
 	File,
 	FileRef,
@@ -136,7 +136,7 @@ function normalize(child: Directory, parent = '.'): Directory {
 			...normalized,
 			[location]: isDirectory(contents)
 				? // Normalize the directory recursively
-				  normalize(contents, path.join(parent, location))
+					normalize(contents, path.join(parent, location))
 				: contents,
 		};
 	}, {} as Directory);
