@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"baseUrl": "./",
-		"module": "commonjs",
+		"module": "Node16",
 		"outDir": "build",
 		"noUnusedParameters": true,
 		"noUnusedLocals": true,
@@ -13,9 +13,16 @@
 		"declaration": true,
 		"skipLibCheck": true,
 		"paths": {
-			"~/mocha-pod": ["lib/index.ts"],
-			"~/testing": ["tests/index.ts"]
+			"~/mocha-pod": [
+				"lib/index.ts"
+			],
+			"~/testing": [
+				"tests/index.ts"
+			]
 		}
 	},
-	"include": ["lib/**/*.ts", "tests/**/*.ts"]
+	"include": [
+		"lib/**/*.ts",
+		"tests/**/*.ts"
+	]
 }

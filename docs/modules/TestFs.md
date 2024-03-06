@@ -40,7 +40,7 @@ Re-exports [testfs](../modules.md#testfs)
 
 #### Defined in
 
-[testfs/types.ts:64](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L64)
+[testfs/types.ts:64](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L64)
 
 ___
 
@@ -52,13 +52,13 @@ Describe a file contents
 
 #### Defined in
 
-[testfs/types.ts:10](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L10)
+[testfs/types.ts:10](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L10)
 
 ___
 
 ### <a id="withoptional" name="withoptional"></a> WithOptional
 
-Ƭ **WithOptional**<`T`, `K`\>: `Omit`<`T`, `K`\> & `Partial`<`Pick`<`T`, `K`\>\>
+Ƭ **WithOptional**\<`T`, `K`\>: `Omit`\<`T`, `K`\> & `Partial`\<`Pick`\<`T`, `K`\>\>
 
 Utility type to mark only some properties of a given type as optional
 
@@ -71,4 +71,4 @@ Utility type to mark only some properties of a given type as optional
 
 #### Defined in
 
-[testfs/types.ts:4](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L4)
+[testfs/types.ts:4](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L4)

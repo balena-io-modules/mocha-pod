@@ -1,9 +1,9 @@
 import { build, resolve as Resolve } from '@balena/compose';
 import dockerIgnore from '@balena/dockerignore';
-import * as Docker from 'dockerode';
+import Docker from 'dockerode';
 import { promises as fs } from 'fs';
-import * as readline from 'readline';
-import * as path from 'path';
+import readline from 'readline';
+import path from 'path';
 import * as tar from 'tar-fs';
 
 import logger from '../logger';

@@ -12,7 +12,7 @@
 
 Create a disabled testfs configuration from the given directory spec.
 
-Calling the [enable](TestFs.Disabled.md#enable) method will prepare the filesystem for testing
+Calling the [TestFs.Disabled.enable](TestFs.Disabled.md#enable) method will prepare the filesystem for testing
 operations.
 
 **IMPORTANT** don't use this module in a real (non-containerized) system, specially with admin permissions, you risk leaving the system
@@ -22,8 +22,8 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `spec?` | [`Directory`](TestFs.Directory.md) | Directory specification with files that need to be               exist after set-up of the test fs. If the file exists previously               in the given location it will be added to the `keep` list for restoring later.               If it doesn't it will be added to the `cleanup` list to be removed during cleanup |
-| `opts?` | `Partial`<[`Opts`](TestFs.Opts.md)\> | Additional options for the test fs. |
+| `spec?` | [`Directory`](TestFs.Directory.md) | Directory specification with files that need to be exist after set-up of the test fs. If the file exists previously in the given location it will be added to the `keep` list for restoring later. If it doesn't it will be added to the `cleanup` list to be removed during cleanup |
+| `opts?` | `Partial`\<[`Opts`](TestFs.Opts.md)\> | Additional options for the test fs. |
 
 #### Returns
 
@@ -33,7 +33,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:183](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L183)
+[testfs/types.ts:183](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L183)
 
 ## Table of contents
 
@@ -55,7 +55,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 | Name | Type |
 | :------ | :------ |
-| `conf` | `Partial`<[`Config`](TestFs.Config.md)\> |
+| `conf` | `Partial`\<[`Config`](TestFs.Config.md)\> |
 
 #### Returns
 
@@ -63,7 +63,7 @@ in an inconsistent state if a crash happens before a `restore()` can be performe
 
 #### Defined in
 
-[testfs/types.ts:190](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L190)
+[testfs/types.ts:190](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L190)
 
 ___
 
@@ -77,7 +77,7 @@ Create a file specification from a partial file description
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `f` | `string` \| `Buffer` \| `Partial`<[`FileSpec`](TestFs.FileSpec.md)\> | file contents or partial file specification |
+| `f` | `string` \| `Buffer` \| `Partial`\<[`FileSpec`](TestFs.FileSpec.md)\> | file contents or partial file specification |
 
 #### Returns
 
@@ -87,7 +87,7 @@ full file specification with defaults set
 
 #### Defined in
 
-[testfs/types.ts:215](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L215)
+[testfs/types.ts:215](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L215)
 
 ___
 
@@ -101,7 +101,7 @@ Create a file reference to an existing file
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `f` | `string` \| [`WithOptional`](../modules/TestFs.md#withoptional)<[`FileRef`](TestFs.FileRef.md), keyof [`FileOpts`](TestFs.FileOpts.md)\> | absolute or relative file path to create the reference from, if a relative path is given, `process.cwd()` will be            used as basedir. This parameter can also be a partial FileRef specification |
+| `f` | `string` \| [`WithOptional`](../modules/TestFs.md#withoptional)\<[`FileRef`](TestFs.FileRef.md), keyof [`FileOpts`](TestFs.FileOpts.md)\> | absolute or relative file path to create the reference from, if a relative path is given, `process.cwd()` will be used as basedir. This parameter can also be a partial FileRef specification |
 
 #### Returns
 
@@ -111,43 +111,43 @@ full file reference specification with defaults set
 
 #### Defined in
 
-[testfs/types.ts:224](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L224)
+[testfs/types.ts:224](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L224)
 
 ___
 
 ### <a id="leftovers" name="leftovers"></a> leftovers
 
-▸ **leftovers**(): `Promise`<`string`[]\>
+▸ **leftovers**(): `Promise`\<`string`[]\>
 
 Return any leftover backup files from previous invocations.
 
-If any leftovers exist prior to running [enable](TestFs.Disabled.md#enable)
+If any leftovers exist prior to running [TestFs.Disabled.enable](TestFs.Disabled.md#enable)
 it means that a previous invocation did not terminate succesfully and is not
 safe to run the setup.
 
 #### Returns
 
-`Promise`<`string`[]\>
+`Promise`\<`string`[]\>
 
 #### Defined in
 
-[testfs/types.ts:207](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L207)
+[testfs/types.ts:207](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L207)
 
 ___
 
 ### <a id="restore" name="restore"></a> restore
 
-▸ **restore**(): `Promise`<`void`\>
+▸ **restore**(): `Promise`\<`void`\>
 
 Restore testsfs globally.
 
 This function looks for a currently enabled instance of a test filesystem and calls
-[restore](TestFs.Enabled.md#restore) on that instance.
+[TestFs.Enabled.restore](TestFs.Enabled.md#restore) on that instance.
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 #### Defined in
 
-[testfs/types.ts:198](https://github.com/balena-io-modules/mocha-pod/blob/83469cb/lib/testfs/types.ts#L198)
+[testfs/types.ts:198](https://github.com/balena-io-modules/mocha-pod/blob/906bf95/lib/testfs/types.ts#L198)
