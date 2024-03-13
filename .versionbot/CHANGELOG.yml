@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update dockerode and @balena/compose
+      hash: f0a185857b7084afacbc6651d247cd50de748f48
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 2.0.3
+  title: ""
+  date: 2024-03-13T15:16:57.668Z
+- commits:
     - subject: Update @balena/lint to v7
       hash: 1e542dd88ec64dcd2639163cbce3fda7eb3102ee
       body: |
