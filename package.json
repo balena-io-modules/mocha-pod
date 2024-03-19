@@ -48,7 +48,7 @@
     "prepack": "npm run build"
   },
   "devDependencies": {
-    "@balena/lint": "^7.3.0",
+    "@balena/lint": "^8.0.0",
     "@types/chai": "^4.2.18",
     "@types/chai-as-promised": "^7.1.4",
     "@types/debug": "^4.1.7",
