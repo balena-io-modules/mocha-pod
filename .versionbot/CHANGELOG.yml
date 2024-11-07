@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency better-lock to v3
+      hash: 61ed53c32122746f2efe73cd6cfaa0e95bc04a60
+      body: |
+        Update better-lock from 2.0.3 to 3.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 2.0.6
+  title: ""
+  date: 2024-11-07T15:22:47.322Z
+- commits:
     - subject: Update dependency lint-staged to v15
       hash: d4c467ee7d8c05864e1fb5ecbe383759be50e82c
       body: |
