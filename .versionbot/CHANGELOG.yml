@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency typedoc to ^0.26.0
+      hash: 29d90f02c9442f8e7ed194875e1d3ceaddebe3e5
+      body: |
+        Update typedoc from 0.25.13 to 0.26.11
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 2.0.7
+  title: ""
+  date: 2024-11-07T16:54:56.013Z
+- commits:
     - subject: Update dependency better-lock to v3
       hash: 61ed53c32122746f2efe73cd6cfaa0e95bc04a60
       body: |
