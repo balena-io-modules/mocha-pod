@@ -76,7 +76,7 @@
   "dependencies": {
     "@balena/compose": "^3.2.1",
     "@balena/dockerignore": "^1.0.2",
-    "better-lock": "^2.0.3",
+    "better-lock": "^3.0.0",
     "debug": "^4.3.4",
     "fast-glob": "^3.2.11",
     "js-yaml": "^4.1.0",
