@@ -134,6 +134,7 @@ function inferDeviceTypeFormArch(cpuArch: Config['deviceArch']) {
 		case 'amd64':
 			return 'genericx86-64-ext';
 		case 'aarch64':
+		case 'arm64':
 			return 'generic-aarch64';
 		case 'armv7hf':
 			return 'raspberrypi3';
@@ -157,7 +158,7 @@ async function arch() {
 	const cpuArch = uname.stdout.trim();
 	switch (cpuArch) {
 		case 'aarch64':
-		case 'amd64':
+		case 'arm64':
 			return 'aarch64';
 		case 'x86_64':
 			return 'amd64';
