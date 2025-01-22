@@ -17,6 +17,10 @@ export const mochaHooks = {
 				fs.readFile('/proc/self/cgroup', 'utf8').then((contents) => {
 					const lines = contents.split(/\r?\n/);
 					if (
+						// in a containerized environment, either the file will be
+						// exactly equal to 0::/ or it will contain some entry starting
+						// with `/docker`
+						contents.trim() !== '0::/' &&
 						lines
 							.map((l) => l.split(':'))
 							.filter(([, , entry]) => entry && entry.startsWith('/docker'))
