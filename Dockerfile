@@ -1,6 +1,6 @@
 ARG NODE_VERSION_MAJOR=16
 
-FROM node:${NODE_VERSION_MAJOR}-alpine as build
+FROM node:${NODE_VERSION_MAJOR}-alpine AS build
 
 WORKDIR /usr/src/app
 
@@ -25,7 +25,7 @@ COPY .mochapodrc.yml ./
 # this image for development of mocha-pod
 ENV MOCHAPOD_SKIP_SETUP=1
 
-FROM build as testing
+FROM build AS testing
 
 # Comment the next line if you want to run the tests as a separate
 # container instead of during the image build step.
@@ -34,6 +34,6 @@ FROM build as testing
 RUN MOCHAPOD_SKIP_SETUP=1 npm run test:integration
 
 # Test everything else for the CI tests
-FROM testing as ci
+FROM testing AS ci
 
 RUN npm run test:unit && npm run build && npm run lint
