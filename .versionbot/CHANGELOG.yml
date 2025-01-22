@@ -1,4 +1,27 @@
 - commits:
+    - subject: Update detection of containerized environment
+      hash: 1c32c2b5b27d788aa0f23ebf9fb42067d2395396
+      body: |
+        `/.dockerenv` is no always present during build. Similarly
+        `/proc/self/cgroup` doesn't seem to include `/docker` in newer versions
+        of docker.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+    - subject: Update @balena/compose and nanoid
+      hash: a4c285d54390a4a46b234f2130b804e9abed3343
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 2.0.8
+  title: ""
+  date: 2025-01-22T22:03:34.622Z
+- commits:
     - subject: Update dependency typedoc to ^0.26.0
       hash: 29d90f02c9442f8e7ed194875e1d3ceaddebe3e5
       body: |
