@@ -1,4 +1,16 @@
 - commits:
+    - subject: Fix architecture detection for arm64
+      hash: 7c395a414c305157e06cacc4bea3c5c6047f73c0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 2.0.9
+  title: ""
+  date: 2025-01-27T10:10:22.582Z
+- commits:
     - subject: Update detection of containerized environment
       hash: 1c32c2b5b27d788aa0f23ebf9fb42067d2395396
       body: |
