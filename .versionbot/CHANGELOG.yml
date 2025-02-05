@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency typedoc to ^0.27.0
+      hash: 08b24637ead9a8ea395fbd3e68aac456fae6a6e7
+      body: |
+        Update typedoc from 0.26.11 to 0.27.6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 2.0.10
+  title: ""
+  date: 2025-02-05T13:01:41.535Z
+- commits:
     - subject: Fix architecture detection for arm64
       hash: 7c395a414c305157e06cacc4bea3c5c6047f73c0
       body: ""

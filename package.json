@@ -1,6 +1,6 @@
 {
   "name": "mocha-pod",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "Mocha + Docker. Run integration tests in a docker container",
   "homepage": "https://github.com/balena-io-modules/mocha-pod#readme",
   "main": "build/index.js",
@@ -84,6 +84,6 @@
     "tar-fs": "^2.1.1"
   },
   "versionist": {
-    "publishedAt": "2025-01-27T10:10:22.687Z"
+    "publishedAt": "2025-02-05T13:01:41.649Z"
   }
 }
