@@ -177,7 +177,12 @@ export async function mochaGlobalSetup() {
 				// Use the project name as part of the image name
 				t: `${config.projectName}:testing`,
 				...config.dockerBuildOpts,
-				cachefrom: [...(config.dockerBuildOpts.cachefrom ?? []), ...cache],
+				// The call to stringify may become redundant if this PR is merged
+				// https://github.com/apocas/dockerode/pull/793
+				cachefrom: JSON.stringify([
+					...(config.dockerBuildOpts.cachefrom ?? []),
+					...cache,
+				]),
 			},
 			hooks,
 			logger.error,
