@@ -50,7 +50,7 @@
   "devDependencies": {
     "@balena/lint": "^8.0.0",
     "@types/chai": "^4.2.18",
-    "@types/chai-as-promised": "^7.1.4",
+    "@types/chai-as-promised": "^8.0.0",
     "@types/debug": "^4.1.7",
     "@types/dockerode": "^3.3.9",
     "@types/js-yaml": "^4.0.5",
@@ -60,7 +60,7 @@
     "@types/tar-stream": "^3.0.0",
     "balena-config-karma": "^4.0.0",
     "chai": "^4.3.4",
-    "chai-as-promised": "^7.1.1",
+    "chai-as-promised": "^8.0.0",
     "dockerode": "^4.0.2",
     "husky": "^8.0.0",
     "lint-staged": "^15.0.0",
