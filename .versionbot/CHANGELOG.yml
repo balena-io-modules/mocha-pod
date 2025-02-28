@@ -1,4 +1,18 @@
 - commits:
+    - subject: Stringify `cachefrom` option passed to the builder
+      hash: 9678e1d7fceabf4407fd47a1cfae305b0d0768e2
+      body: ""
+      footer:
+        Relates-to: https://github.com/apocas/docker-modem/pull/181
+        relates-to: https://github.com/apocas/docker-modem/pull/181
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 2.0.11
+  title: ""
+  date: 2025-02-28T17:13:38.820Z
+- commits:
     - subject: Update dependency typedoc to ^0.27.0
       hash: 08b24637ead9a8ea395fbd3e68aac456fae6a6e7
       body: |
