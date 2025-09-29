@@ -217,7 +217,12 @@ function build(
 					// Now restore the files from the backup
 					await new Promise((resolve) =>
 						createReadStream(tarFile)
-							.pipe(tar.extract(rootdir))
+							.pipe(
+								tar.extract(rootdir, {
+									validateSymlinks: false,
+									// TODO: This isn't typed in @types/tar-fs yet
+								} as tar.ExtractOptions),
+							)
 							.on('finish', resolve),
 					);
 					debug('restore: recovered', toKeep);
