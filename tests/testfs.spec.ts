@@ -513,4 +513,13 @@ describe('testfs: integration tests', function () {
 			'file should not exist after the test',
 		).to.be.rejected;
 	});
+
+	it('should not error when restoring backed up files that are symlinks', async () => {
+		// /etc/os-release is a symlink to /usr/lib/os-release on Linux systems
+		const tmp = await testfs({
+			'/etc/os-release': testfs.from('tests/data/etc/foo-bar-baz'),
+		}).enable();
+		expect(await fs.readFile('/etc/os-release', 'utf-8')).to.equal('foo=bar');
+		await tmp.restore();
+	});
 });

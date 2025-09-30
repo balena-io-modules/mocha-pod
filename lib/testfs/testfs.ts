@@ -61,7 +61,7 @@ const lock = (() => {
 
 	// Stack of currently locked instances.
 	// only the top of the stack can be restored
-	const stack = [] as Enabled[];
+	const stack: Enabled[] = [];
 
 	const releaseAll = async () => {
 		while (stack.length > 0) {
@@ -199,7 +199,9 @@ function build(
 						})
 						.pipe(createWriteStream(filename));
 
-					stream.on('finish', () => resolve(filename));
+					stream.on('finish', () => {
+						resolve(filename);
+					});
 				});
 
 				// Create the restore function to be used in case of any errors
@@ -217,7 +219,14 @@ function build(
 					// Now restore the files from the backup
 					await new Promise((resolve) =>
 						createReadStream(tarFile)
-							.pipe(tar.extract(rootdir))
+							.pipe(
+								tar.extract(rootdir, {
+									// Bypass tar-fs symlink validation
+									// The backup is created from the same system, so contents are trusted
+									// FIXME: validateSymlinks is not typed in @types/tar-fs yet
+									validateSymlinks: false,
+								} as tar.ExtractOptions),
+							)
 							.on('finish', resolve),
 					);
 					debug('restore: recovered', toKeep);

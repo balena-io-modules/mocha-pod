@@ -23,8 +23,8 @@ export const mochaHooks = {
 						contents.trim() !== '0::/' &&
 						lines
 							.map((l) => l.split(':'))
-							.filter(([, , entry]) => entry && entry.startsWith('/docker'))
-							.length === 0
+							.filter(([, , entry]) => entry?.startsWith('/docker')).length ===
+							0
 					) {
 						// Throw a place holder error
 						throw new Error();

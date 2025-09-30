@@ -79,7 +79,7 @@ function normalize(child: Directory, parent = '.'): Directory {
 			return [relPath, contents];
 		})
 		// Group the directories by the first path element
-		.reduce((normalized, [location, contents]) => {
+		.reduce<Directory>((normalized, [location, contents]) => {
 			const [basedir, ...rest] = location.split(path.sep);
 
 			// If the path resolution in the previous step returns ''
@@ -127,10 +127,10 @@ function normalize(child: Directory, parent = '.'): Directory {
 				...normalized,
 				[basedir]: rest.length > 0 ? { [file]: contents } : contents,
 			};
-		}, {} as Directory);
+		}, {});
 
 	// Recursively normalize the subdirectories
-	return Object.keys(grouped).reduce((normalized, location) => {
+	return Object.keys(grouped).reduce<Directory>((normalized, location) => {
 		const contents = grouped[location];
 		return {
 			...normalized,
@@ -139,7 +139,7 @@ function normalize(child: Directory, parent = '.'): Directory {
 					normalize(contents, path.join(parent, location))
 				: contents,
 		};
-	}, {} as Directory);
+	}, {});
 }
 
 /**
@@ -285,12 +285,12 @@ function flatList(root: Directory, parent = '/'): Array<[string, File]> {
  * ```
  */
 export function flatten(root: Directory): Directory {
-	return flatList(normalize(root)).reduce(
+	return flatList(normalize(root)).reduce<Directory>(
 		(res, [filename, contents]) => ({
 			...res,
 			[filename]: contents,
 		}),
-		{} as Directory,
+		{},
 	);
 }
 
