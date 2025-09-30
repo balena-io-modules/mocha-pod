@@ -1,4 +1,40 @@
 - commits:
+    - subject: Remove support for Node <20
+      hash: d2d0652e94636327237369b9a4f4a8017e66400d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Christina Ying Wang <christina@balena.io>
+        signed-off-by: Christina Ying Wang <christina@balena.io>
+      author: Christina Ying Wang
+      nested: []
+    - subject: Bump tar-fs to 3.1.1
+      hash: da1ed85d7c5f2385274e905a6f2efdb7af11d07e
+      body: >
+        tar-fs@3.1.1 patches CVE-2025-59343, but this causes mocha-pod to error
+        with
+
+        'not a valid symlink' (thrown from tar-fs) when restoring backed up
+        files
+
+        that are symlinks. We bypass the symlink validation as the restored
+        files are
+
+        being restored from a known system, so are trusted.
+      footer:
+        See: https://github.com/mafintosh/tar-fs/security/advisories/GHSA-vj76-c3g6-qr5v
+        see: https://github.com/mafintosh/tar-fs/security/advisories/GHSA-vj76-c3g6-qr5v
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Christina Ying Wang <christina@balena.io>
+        signed-off-by: Christina Ying Wang <christina@balena.io>
+      author: Christina Ying Wang
+      nested: []
+  version: 2.0.12
+  title: ""
+  date: 2025-09-30T17:54:21.525Z
+- commits:
     - subject: Stringify `cachefrom` option passed to the builder
       hash: 9678e1d7fceabf4407fd47a1cfae305b0d0768e2
       body: ""
