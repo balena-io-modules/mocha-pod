@@ -219,7 +219,14 @@ function build(
 					// Now restore the files from the backup
 					await new Promise((resolve) =>
 						createReadStream(tarFile)
-							.pipe(tar.extract(rootdir))
+							.pipe(
+								tar.extract(rootdir, {
+									// Bypass tar-fs symlink validation
+									// The backup is created from the same system, so contents are trusted
+									// FIXME: validateSymlinks is not typed in @types/tar-fs yet
+									validateSymlinks: false,
+								} as tar.ExtractOptions),
+							)
 							.on('finish', resolve),
 					);
 					debug('restore: recovered', toKeep);
