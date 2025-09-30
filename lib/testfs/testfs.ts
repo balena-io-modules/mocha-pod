@@ -61,7 +61,7 @@ const lock = (() => {
 
 	// Stack of currently locked instances.
 	// only the top of the stack can be restored
-	const stack = [] as Enabled[];
+	const stack: Enabled[] = [];
 
 	const releaseAll = async () => {
 		while (stack.length > 0) {
@@ -199,7 +199,9 @@ function build(
 						})
 						.pipe(createWriteStream(filename));
 
-					stream.on('finish', () => resolve(filename));
+					stream.on('finish', () => {
+						resolve(filename);
+					});
 				});
 
 				// Create the restore function to be used in case of any errors
