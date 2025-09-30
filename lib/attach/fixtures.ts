@@ -54,9 +54,9 @@ async function writeCache(stageIds: string[], cachePath: string) {
 		});
 
 		// Write stage ids as cache for next build. Ignore any errors
-		await fs
-			.writeFile(cachePath, JSON.stringify(stageIds))
-			.catch((e) => logger.debug(`Could not write cache: ${e.message}`));
+		await fs.writeFile(cachePath, JSON.stringify(stageIds)).catch((e) => {
+			logger.debug(`Could not write cache: ${e.message}`);
+		});
 	}
 }
 
@@ -127,7 +127,7 @@ export async function mochaGlobalSetup() {
 		stageIds: string[];
 	}>((resolve) => {
 		// Store the stage ids for caching
-		const ids = [] as string[];
+		const ids: string[] = [];
 
 		const hooks = {
 			buildStream: (input: NodeJS.ReadWriteStream): void => {
