@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency @balena/compose to v7
+      hash: 415d177baa3d06df2bdd8488601a3b7f0b202756
+      body: |
+        Update @balena/compose from 6.0.1 to 7.0.20
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 2.0.13
+  title: ""
+  date: 2025-12-12T16:17:30.961Z
+- commits:
     - subject: Remove support for Node <20
       hash: d2d0652e94636327237369b9a4f4a8017e66400d
       body: ""
