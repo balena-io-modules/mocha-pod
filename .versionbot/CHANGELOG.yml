@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency typedoc to ^0.28.0
+      hash: 48d78c5d3c24acec66fe3da546cd3869d3a35253
+      body: |
+        Update typedoc from 0.27.9 to 0.28.15
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 2.0.15
+  title: ""
+  date: 2025-12-16T16:35:13.913Z
+- commits:
     - subject: Update dependency rimraf to v6
       hash: ad8304adaeb29f14ed5afaebf4f63a6df4118bc6
       body: |
