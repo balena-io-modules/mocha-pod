@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency rimraf to v6
+      hash: ad8304adaeb29f14ed5afaebf4f63a6df4118bc6
+      body: |
+        Update rimraf from 5.0.10 to 6.1.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 2.0.14
+  title: ""
+  date: 2025-12-16T14:29:43.671Z
+- commits:
     - subject: Update dependency @balena/compose to v7
       hash: 415d177baa3d06df2bdd8488601a3b7f0b202756
       body: |
