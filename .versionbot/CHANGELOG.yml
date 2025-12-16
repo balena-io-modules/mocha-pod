@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update dependency lint-staged to v16
+      hash: 25b4ac99ebca7d7d419559df5595c86f15fc487a
+      body: |
+        Update lint-staged from 15.5.2 to 16.2.7
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 2.0.16
+  title: ""
+  date: 2025-12-16T17:10:39.434Z
+- commits:
     - subject: Update dependency typedoc to ^0.28.0
       hash: 48d78c5d3c24acec66fe3da546cd3869d3a35253
       body: |
