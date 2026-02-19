@@ -1,4 +1,18 @@
 - commits:
+    - subject: "Add id-token: write permission for NPM OIDC publishing"
+      hash: 4dcfeb80f44ce505f971780158e3cf21f6d61b10
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.0.17
+  title: ""
+  date: 2026-02-19T14:07:47.060Z
+- commits:
     - subject: Update dependency lint-staged to v16
       hash: 25b4ac99ebca7d7d419559df5595c86f15fc487a
       body: |
